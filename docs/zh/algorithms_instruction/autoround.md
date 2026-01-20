@@ -170,8 +170,8 @@ spec:
 | 字段名 | 作用 | 类型 | 说明 | 示例值 |
 |--------|------|------|------|--------|
 | qconfig | 量化配置参数 | `object` | 包含激活值量化和权重量化的详细配置 | [激活值配置](#qconfigact-激活值量化配置)、[权重量化配置](#qconfigweight-权重量化配置) |
-| include | 包含的层模式 | `array[string]` | 支持通配符匹配，指定要量化的层 | `["*"]`, `["*self_attn*"]` |
-| exclude | 排除的层模式 | `array[string]` | 支持通配符匹配，优先级高于include | `["*down_proj*"]` |
+| include | 包含的层 | `array[string]` | 支持通配符匹配，指定要量化的层 | `["*"]`, `["*self_attn*"]` |
+| exclude | 排除的层 | `array[string]` | 支持通配符匹配，优先级高于include | `["*down_proj*"]` |
 
 #### qconfig.act (激活值量化配置)
 

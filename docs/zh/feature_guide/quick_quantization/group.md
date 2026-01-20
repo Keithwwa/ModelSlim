@@ -20,41 +20,43 @@
 #### W8A8混合量化配置
 
 ```yaml
+# 定义 W8A8 静态量化配置模板
 default_w8a8: &default_w8a8
-  act:
-    scope: "per_tensor"   
-    dtype: "int8"        
-    symmetric: False      
-    method: "minmax"     
-  weight:
-    scope: "per_channel"   
-    dtype: "int8"       
-    symmetric: True       
-    method: "minmax"     
+  act:                         # 激活值配置
+    scope: "per_tensor"        # 静态量化标识：整个张量共用量化参数
+    dtype: "int8"              # 数据类型：int8
+    symmetric: False           # 非对称量化：false
+    method: "minmax"           # 量化方法：minmax
+  weight:                      # 权重量化配置
+    scope: "per_channel"       # 权重量化粒度：逐通道量化
+    dtype: "int8"              # 数据类型：int8
+    symmetric: True            # 对称量化：true
+    method: "minmax"           # 量化方法：minmax
 
+# 定义 W8A8 动态量化配置模板
 default_w8a8_dynamic: &default_w8a8_dynamic
-  act:
-    scope: "per_token"   
-    dtype: "int8"        
-    symmetric: True      
-    method: "minmax"      
-  weight:
-    scope: "per_channel"   
-    dtype: "int8"        
-    symmetric: True       
-    method: "minmax"
+  act:                         # 激活值配置
+    scope: "per_token"         # 动态量化标识：每个 token 独立量化参数
+    dtype: "int8"              # 数据类型：int8
+    symmetric: True            # 对称量化：true
+    method: "minmax"           # 量化方法：minmax
+  weight:                      # 权重量化配置
+    scope: "per_channel"       # 权重量化粒度：逐通道量化
+    dtype: "int8"              # 数据类型：int8
+    symmetric: True            # 对称量化：true
+    method: "minmax"           # 量化方法：minmax
     
 spec:
-  process:
-    - type: "group"
-      configs:
-        - type: "linear_quant"
+  process:                     # 处理器列表
+    - type: "group"            # 处理器类型：分组处理器
+      configs:                 # 组内处理器配置列表
+        - type: "linear_quant" # 任务1：对 Attention 层应用静态量化，以获取最佳推理性能
           qconfig: *default_w8a8
           include: ["*self_attn*"]
-        - type: "linear_quant"
+        - type: "linear_quant" # 任务2：对 MLP 层应用动态量化，以应对激活离群值并保护精度
           qconfig: *default_w8a8_dynamic
           include: ["*mlp*"]
-          exclude: ["*gate"]
+          exclude: ["*gate"]   # 排除门控层，实现更精细的层级控制
 ```
 
 ### YAML配置字段详解

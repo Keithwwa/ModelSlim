@@ -105,8 +105,8 @@
 spec:
   process:
     - type: "fa3_quant"
-      include: [ "*" ]                           # 包含的注意力层模式
-      exclude: [ "model.layers.0.self_attn" ]   # 排除的注意力层模式
+      include: [ "*" ]                           # 包含的注意力层
+      exclude: [ "model.layers.0.self_attn" ]   # 排除的注意力层
 ```
 
 ### YAML配置字段详解
@@ -114,8 +114,8 @@ spec:
 | 字段名  | 作用               | 数据类型      | 默认值 | 说明                                               |
 | ------- | ------------------ | ------------- | ------ | -------------------------------------------------- |
 | type    | 处理器类型标识     | string        | -      | 固定值"fa3_quant"，用于标识该对象为FA3量化处理器。 |
-| include | 包含的注意力层模式 | array[string] | ["*"]  | 支持通配符匹配，指定要执行FA3量化的注意力层。      |
-| exclude | 排除的注意力层模式 | array[string] | []     | 支持通配符匹配，优先级高于 include。               |
+| include | 包含的注意力层 | array[string] | ["*"]  | 支持通配符匹配，指定要执行FA3量化的注意力层。      |
+| exclude | 排除的注意力层 | array[string] | []     | 支持通配符匹配，优先级高于 include。               |
 
 ## 模型适配
 

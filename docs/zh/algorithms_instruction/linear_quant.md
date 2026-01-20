@@ -47,6 +47,13 @@ $$Q = \text{clamp}(\text{round}(\frac{V}{S}) + Z, Q_{min}, Q_{max})$$
 
 ## 功能介绍
 
+### 静态量化与动态量化的核心差异
+
+在一键量化中，通过 `qconfig.act.scope` 字段来区分 **静态量化** 与 **动态量化**：
+- **静态量化 (`per_tensor`)**：在量化校准阶段统计并固定量化参数（scale和offset），推理时直接使用。**特点**：推理性能最优，计算开销最小，但在分布变化剧烈时精度可能受损。
+- **动态量化 (`per_token`)**：在推理过程中，针对每个 token 实时计算量化参数。**特点**：量化粒度更细，能够更好地捕捉激活值的动态分布，**精度通常优于静态量化**，但会引入一定的实时计算开销。
+- **PDMIX 混合量化 (`pd_mix`)**：Prefilling 阶段使用 `per_token`，Decoding 阶段使用 `per_tensor`。**特点**：旨在平衡精度和性能，特别适用于生成式模型的推理加速，参考[PDMIX：激活值阶段间混合量化算法说明](../../algorithms_instruction/pdmix.md)。
+
 ### YAML配置示例
 
 #### W8A8静态量化配置
@@ -151,6 +158,16 @@ $$Q = \text{clamp}(\text{round}(\frac{V}{S}) + Z, Q_{min}, Q_{max})$$
 | **Histogram** | 激活 | 通过直方图分析激活值分布，自动截断离群值以优化量化范围。精度通常优于 MinMax。 | [Histogram 说明](../../algorithms_instruction/histogram_activation_quantization.md) |
 | **SSZ** | 权重 | 通过迭代搜索最优缩放因子，最小化量化误差。专为 INT4 等低比特权重量化设计。 | [SSZ 说明](../../algorithms_instruction/ssz.md) |
 | **GPTQ** | 权重 | 通过逐列优化方式，将量化误差在后续未权重中进行补偿，进而达到最小化量化误差。| [GPTQ说明](../../algorithms_instruction/gptq.md) |
+
+### 支持的量化算法
+
+在 `linear_quant` 处理器中，你可以通过 `method` 参数选择不同的量化算法：
+
+| 算法名称 | 适用对象 | 简介 | 详细说明 |
+| :--- | :--- | :--- | :--- |
+| **MinMax** | 权重 / 激活 | 最基础的量化算法，通过统计最大最小值确定量化范围。简单高效，INT8 场景首选。 | [MinMax 说明](../../algorithms_instruction/minmax.md) |
+| **Histogram** | 激活 | 通过直方图分析激活值分布，自动截断离群值以优化量化范围。精度通常优于 MinMax。 | [Histogram 说明](../../algorithms_instruction/histogram_activation_quantization.md) |
+| **SSZ** | 权重 | 通过迭代搜索最优缩放因子，最小化量化误差。专为 INT4 等低比特权重量化设计。 | [SSZ 说明](../../algorithms_instruction/ssz.md) |
 
 ### 层过滤机制详解
 

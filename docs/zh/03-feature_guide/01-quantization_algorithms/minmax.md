@@ -1,41 +1,41 @@
-# MinMax：最小最大值量化算法说明
+# MinMax：最小最大值量化算法说�?
 
-## 简介
+## 简�?
 
 - **概述**：MinMax 是一种最基础且最常用的量化算法。它通过统计张量（权重或激活值）中的最小值和最大值来确定量化范围，从而计算量化缩放因子（scale）和偏移量（offset）。
 - **核心思想**：将原始浮点数范围线性映射到目标数值范围（如 INT8 的 [-128, 127] 或 FP8 的表示范围）。该算法简单高效，计算开销极低，是大多数常规量化场景的首选。
 
-## 使用前准备
+## 使用前准�?
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)�?
 
-## 原理和实现
+## 原理和实�?
 
 ### 原理
 
-MinMax 算法基于以下公式计算量化参数：
+MinMax 算法基于以下公式计算量化参数�?
 
-1. **确定范围**：
+1. **确定范围**�?
    - $V_{min} = \min(X)$
    - $V_{max} = \max(X)$
 
-2. **计算缩放因子 (Scale)**：
+2. **计算缩放因子 (Scale)**�?
    - 对于非对称量化：$S = \frac{V_{max} - V_{min}}{Q_{max} - Q_{min}}$
-   - 对于对称量化：$S = \frac{\max(|V_{min}|, |V_{max}|)}{Q_{max}}$
+   - 对于对称量化�?S = \frac{\max(|V_{min}|, |V_{max}|)}{Q_{max}}$
 
-3. **计算偏移量 (Offset)**：
+3. **计算偏移�?(Offset)**�?
    - 对于非对称量化：$Z = Q_{min} - \text{round}(\frac{V_{min}}{S})$
-   - 对于对称量化：$Z = 0$
+   - 对于对称量化�?Z = 0$
 
 其中 $Q_{max}$ 和 $Q_{min}$ 是目标数据类型的数值范围最大值和最小值。例如对于 INT8 对称量化，$Q_{max}=127$；对于 FP8 等浮点量化场景，则对应其格式所能表示的范围。
 
 ### 实现
 
-算法在 `msmodelslim/core/quantizer/impl/minmax.py` 中实现。
+算法�?`msmodelslim/core/quantizer/impl/minmax.py` 中实现�?
 
 ## 功能介绍
 
-在 `linear_quant` 处理器中使用 MinMax 算法：
+�?`linear_quant` 处理器中使用 MinMax 算法�?
 
 ```yaml
 spec:
@@ -43,14 +43,14 @@ spec:
     - type: "linear_quant"
       qconfig:
         act:
-          method: "minmax"    # 激活值使用 minmax
+          method: "minmax"    # 激活值使�?minmax
         weight:
           method: "minmax"    # 权重使用 minmax
 ```
 
 ### 参数说明
 
-| 参数名 | 作用 | 可选值 | 说明 |
+| 参数�?| 作用 | 可选�?| 说明 |
 |--------|------|--------|------|
 | method | 量化方法 | `"minmax"` | 指定使用 MinMax 算法 |
 

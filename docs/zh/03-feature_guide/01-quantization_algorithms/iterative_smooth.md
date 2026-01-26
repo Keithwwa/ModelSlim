@@ -1,33 +1,33 @@
-# Iterative Smooth：离群值抑制算法说明
+# Iterative Smooth：离群值抑制算法说�?
 
-## 简介
+## 简�?
 
-- **概述**：Iterative Smooth（迭代平滑）是一种用于大语言模型量化过程中抑制激活离群值的算法。该算法通过动态调整权重和激活的缩放因子，在保持模型精度的同时，有效减少量化误差。
-- **核心思想**：Iterative Smooth算法的核心思想是通过在相邻层之间重新分配量化误差，使得激活值的分布更加均匀，从而减少离群值对量化精度的影响。
+- **概述**：Iterative Smooth（迭代平滑）是一种用于大语言模型量化过程中抑制激活离群值的算法。该算法通过动态调整权重和激活的缩放因子，在保持模型精度的同时，有效减少量化误差�?
+- **核心思想**：Iterative Smooth算法的核心思想是通过在相邻层之间重新分配量化误差，使得激活值的分布更加均匀，从而减少离群值对量化精度的影响�?
 
-## 使用前准备
+## 使用前准�?
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)�?
 
-## 原理和实现
+## 原理和实�?
 
 ### 原理
 
-算法使用以下公式计算平滑缩放因子：
+算法使用以下公式计算平滑缩放因子�?
 
 ```
 scales = (A_scale**α / W_scale**(1-α)).clamp(min=scale_min)
 ```
 
-其中：
+其中�?
 - `A_scale`：激活值的缩放因子
 - `W_scale`：权重的缩放因子（取每列的最大值）
-- `α`：平衡参数，控制激活和权重的相对重要性（默认值：0.9）
-- `scale_min`：缩放因子的最小值（默认值：1e-5）
+- `α`：平衡参数，控制激活和权重的相对重要性（默认值：0.9�?
+- `scale_min`：缩放因子的最小值（默认值：1e-5�?
 
-### 支持的子图类型
+### 支持的子图类�?
 
-#### 1. NormLinearSubgraph（归一化-线性子图）
+#### 1. NormLinearSubgraph（归一�?线性子图）
 
 适用于包含归一化层和多个线性层的结构，如：
 
@@ -36,12 +36,12 @@ x = norm(x)
 y = torch.cat([linear(x) for linear in linears], dim=-1)
 ```
 
-**处理方式：**
-- 计算所有线性层权重的列最大值作为权重缩放因子
+**处理方式�?*
+- 计算所有线性层权重的列最大值作为权重缩放因�?
 - 对每个线性层应用正向缩放
-- 对归一化层应用反向缩放（1/scales）
+- 对归一化层应用反向缩放�?/scales�?
 
-#### 2. LinearLinearSubgraph（线性-线性子图）
+#### 2. LinearLinearSubgraph（线�?线性子图）
 
 适用于两个连续线性层的结构：
 
@@ -49,35 +49,35 @@ y = torch.cat([linear(x) for linear in linears], dim=-1)
 y = linear2(linear1(x))
 ```
 
-**处理方式：**
-- 基于linear2的权重计算缩放因子
+**处理方式�?*
+- 基于linear2的权重计算缩放因�?
 - 对linear2应用正向缩放
-- 对linear1应用反向缩放（1/scales）
+- 对linear1应用反向缩放�?/scales�?
 
 #### 3. OVSubgraph（注意力输出-值子图）
 
 适用于注意力机制中的输出投影和值投影：
-- 支持MHA（多头注意力）
+- 支持MHA（多头注意力�?
 - 支持MQA（多查询注意力）
-- 支持GQA（分组查询注意力）
+- 支持GQA（分组查询注意力�?
 
-**处理方式：**
+**处理方式�?*
 - 基于o_proj权重计算缩放因子
 - 对o_proj应用正向缩放
-- 对v_proj应用反向缩放（1/scales）
+- 对v_proj应用反向缩放�?/scales�?
 
 #### 4. UpDownSubgraph（上投影-下投影子图）
 
-适用于MLP门控机制：
+适用于MLP门控机制�?
 
 ```python
 y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 ```
 
-**处理方式：**
+**处理方式�?*
 - 基于down_proj权重计算缩放因子
 - 对down_proj应用正向缩放
-- 对up_proj应用反向缩放（1/scales）
+- 对up_proj应用反向缩放�?/scales�?
 
 #### 5. NonFusionSubgraph（非融合子图）
 
@@ -97,27 +97,27 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 
 ### 实现
 
-算法在 `msmodelslim/processor/anti_outlier/iter_smooth/processor.py` 中实现，处理流程分两阶段：
+算法�?`msmodelslim/processor/anti_outlier/iter_smooth/processor.py` 中实现，处理流程分两阶段�?
 
-#### 1) 预处理阶段（preprocess）
+#### 1) 预处理阶段（preprocess�?
 
 **子图发现与构建：**
-- 通过 `SubgraphProcessor` 获取全局子图信息，识别四种类型的子图：`norm-linear`、`linear-linear`、`ov`、`up-down`。
-- 根据配置的 `include/exclude` 模式过滤子图。
+- 通过 `SubgraphProcessor` 获取全局子图信息，识别四种类型的子图：`norm-linear`、`linear-linear`、`ov`、`up-down`�?
+- 根据配置�?`include/exclude` 模式过滤子图�?
 
-**统计信息收集：**
-- 为所有子图中的线性模块安装前向钩子（forward hook）。
-- 钩子在 `[batch, seq, hidden_dim]` 维度上收集激活值统计信息：
-  - 每通道的最大值、最小值
-  - 每通道的绝对最大值（用于平滑缩放计算）
-  - 通道偏移量（用于对称量化）
-- 支持分布式训练环境下的统计信息聚合。
+**统计信息收集�?*
+- 为所有子图中的线性模块安装前向钩子（forward hook）�?
+- 钩子�?`[batch, seq, hidden_dim]` 维度上收集激活值统计信息：
+  - 每通道的最大值、最小�?
+  - 每通道的绝对最大值（用于平滑缩放计算�?
+  - 通道偏移量（用于对称量化�?
+- 支持分布式训练环境下的统计信息聚合�?
 
-#### 2) 后处理阶段（postprocess）
+#### 2) 后处理阶段（postprocess�?
 
-**按优先级处理子图：**
-- 按默认配置的优先级顺序处理：`up-down`（最高）→ `ov`（高）→ `norm-linear`（中）→ `linear-linear`（低）。
-- 每种子图类型调用相应的平滑处理方法。
+**按优先级处理子图�?*
+- 按默认配置的优先级顺序处理：`up-down`（最高）�?`ov`（高）→ `norm-linear`（中）→ `linear-linear`（低）�?
+- 每种子图类型调用相应的平滑处理方法�?
 
 **子图平滑处理：**
 - **Norm-Linear子图**：对归一化层和后续线性层应用平滑，支持RMSNorm偏置调整。
@@ -126,15 +126,15 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 - **Up-Down子图**：处理MLP门控机制，对上下投影层应用平滑。
 - **非融合子图**：当 `mapping.source` 为 `None` 且 `mapping.targets` 非空时，将目标线性层组成 NonFusionSubgraph，仅对权重做缩放并在每层注册输入侧 scale 的 pre-hook，不融合到前置层；不支持 shift。
 
-**平滑算法核心：**
-- 基于收集的激活统计信息计算每通道的缩放因子。
-- 使用 `iter_smooth` 算法对子图进行迭代平滑优化。
-- 支持可配置的平滑参数：`alpha`（平滑强度）、`scale_min`（最小缩放）、`symmetric`（对称量化）。
+**平滑算法核心�?*
+- 基于收集的激活统计信息计算每通道的缩放因子�?
+- 使用 `iter_smooth` 算法对子图进行迭代平滑优化�?
+- 支持可配置的平滑参数：`alpha`（平滑强度）、`scale_min`（最小缩放）、`symmetric`（对称量化）�?
 
-**资源清理：**
+**资源清理�?*
 - 清理所有安装的统计钩子
 - 释放统计信息内存
-- 恢复模型原始状态
+- 恢复模型原始状�?
 
 ## 适用要求
 
@@ -151,18 +151,18 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 作为 Processor 使用
 
 ```yaml
-- type: "iter_smooth"                    # 固定为 `iter_smooth`，用于指定 Processor。
-  alpha: 0.9                             # 浮点数, > 0, 默认 0.9，平衡参数，控制激活和权重的相对重要性。
-  scale_min: 1e-5                        # 浮点数, > 0, 默认 1e-5，缩放因子的下界，防止数值过小导致数值不稳定。
-  symmetric: True                        # 布尔型，默认为True，是否启用对称，True为对称，False为非对称。
-  enable_subgraph_type:                  # 字符串列表，代表开启的子图类型。
+- type: "iter_smooth"                    # 固定�?`iter_smooth`，用于指�?Processor�?
+  alpha: 0.9                             # 浮点�? > 0, 默认 0.9，平衡参数，控制激活和权重的相对重要性�?
+  scale_min: 1e-5                        # 浮点�? > 0, 默认 1e-5，缩放因子的下界，防止数值过小导致数值不稳定�?
+  symmetric: True                        # 布尔型，默认为True，是否启用对称，True为对称，False为非对称�?
+  enable_subgraph_type:                  # 字符串列表，代表开启的子图类型�?
     - 'norm-linear'
     - 'linear-linear'
     - 'ov'
     - 'up-down'
-  include:                                # 包含的层，支持通配符。
+  include:                                # 包含的层，支持通配符�?
     - "*"
-  exclude:                                # 排除的层，支持通配符。
+  exclude:                                # 排除的层，支持通配符�?
     - "*self_attn*"
 ```
 
@@ -172,33 +172,33 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 spec:
   process:
     - type: "iter_smooth"
-      alpha: 0.9                           # 平衡参数，控制激活和权重的相对重要性，默认0.9。
-      scale_min: 1e-5                      # 缩放因子的最小值，防止数值不稳定，默认1e-5。
-      symmetric: True                     # 是否启用对称量化，默认True。
-      enable_subgraph_type:                # 开启的子图类型。
+      alpha: 0.9                           # 平衡参数，控制激活和权重的相对重要性，默认0.9�?
+      scale_min: 1e-5                      # 缩放因子的最小值，防止数值不稳定，默�?e-5�?
+      symmetric: True                     # 是否启用对称量化，默认True�?
+      enable_subgraph_type:                # 开启的子图类型�?
         - 'norm-linear'
         - 'linear-linear'
         - 'ov'
         - 'up-down'
-      include: ["*"]                       # 包含的层，支持通配符。
-      exclude: ["*self_attn*"]             # 排除的层，支持通配符。
+      include: ["*"]                       # 包含的层，支持通配符�?
+      exclude: ["*self_attn*"]             # 排除的层，支持通配符�?
 ```
 
 ### YAML配置字段详解
 
-| 字段名 | 作用      | 说明 |
+| 字段�?| 作用      | 说明 |
 |--------|---------|------|
-| type | 处理器类型标识 | 固定值"iter_smooth"，用于标识这是一个迭代平滑处理器。|
-| alpha | 平衡参数    | 大于0的浮点数，控制激活和权重的相对重要性，默认0.9。 |
-| scale_min | 缩放因子最小值 | 大于0的浮点数，防止数值不稳定，默认1e-5。 |
-| symmetric | 是否对称量化  | 布尔值，True为对称，False为非对称，默认True。 |
-| enable_subgraph_type | 开启的子图类型 | 支持的子图类型列表，包括"norm-linear"、"linear-linear"、"ov"、"up-down"。 |
-| include | 包含的层  | 支持通配符匹配。 |
+| type | 处理器类型标�?| 固定�?iter_smooth"，用于标识这是一个迭代平滑处理器。|
+| alpha | 平衡参数    | 大于0的浮点数，控制激活和权重的相对重要性，默认0.9�?|
+| scale_min | 缩放因子最小�?| 大于0的浮点数，防止数值不稳定，默�?e-5�?|
+| symmetric | 是否对称量化  | 布尔值，True为对称，False为非对称，默认True�?|
+| enable_subgraph_type | 开启的子图类型 | 支持的子图类型列表，包括"norm-linear"�?linear-linear"�?ov"�?up-down"�?|
+| include | 包含的层  | 支持通配符匹配�?|
 | exclude | 排除的层  | 支持通配符匹配。|
 
 ## 模型适配
 
-### 接口与数据结构
+### 接口与数据结�?
 
 ```python
 from dataclasses import dataclass, field
@@ -213,11 +213,11 @@ class MappingConfig:
 
 @dataclass
 class FusionConfig:
-    """融合配置，支持QKV融合等高级功能"""
-    fusion_type: str = "none"  # 融合类型：none, qkv, custom等
+    """融合配置，支持QKV融合等高级功�?""
+    fusion_type: str = "none"  # 融合类型：none, qkv, custom�?
     num_attention_heads: Optional[int] = None  # 注意力头数量
     num_key_value_heads: Optional[int] = None  # 键值头数量
-    custom_config: Optional[Dict[str, Any]] = None  # 自定义配置
+    custom_config: Optional[Dict[str, Any]] = None  # 自定义配�?
 
 @dataclass
 class AdapterConfig:
@@ -231,13 +231,13 @@ class IterSmoothInterface(ABC):
     @abstractmethod
     def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
         """
-        返回模型中所有可进行Smooth处理的子图配置
+        返回模型中所有可进行Smooth处理的子图配�?
         
         Returns:
             List[AdapterConfig]: 子图配置列表，每个配置包含：
                 - subgraph_type: 子图类型
-                - mapping: 源模块到目标模块的映射关系
-                - fusion: 融合配置（如QKV融合）
+                - mapping: 源模块到目标模块的映射关�?
+                - fusion: 融合配置（如QKV融合�?
         """
         pass
 ```
@@ -261,7 +261,7 @@ class IterSmoothInterface(ABC):
    - **非融合子图**：`source=None`，`targets` 为需要平滑的线性层路径列表（可不融合到前置层）
 3. **指定模块路径**：使用完整的模块路径，如 `model.layers.{i}.self_attn.q_proj`。
 
-**参考实现：** 可参考 `msmodelslim/model/qwen3/model_adapter.py` 中的 `Qwen3ModelAdapter` 实现。
+**参考实现：** 可参�?`msmodelslim/model/qwen3/model_adapter.py` 中的 `Qwen3ModelAdapter` 实现�?
 
 ### 配置示例
 
@@ -333,20 +333,20 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
 
 ## FAQ
 ### 1. 模块名不匹配
-**现象**: `include/exclude` 未命中时，日志提示未匹配模式。  
-**解决方案**: 核对完整模块名是否与 `named_modules()` 返回的路径一致。
+**现象**: `include/exclude` 未命中时，日志提示未匹配模式�? 
+**解决方案**: 核对完整模块名是否与 `named_modules()` 返回的路径一致�?
 
 ### 2. 子图配置错误
-**现象**: `get_adapter_config_for_subgraph()` 返回的配置不正确。  
-**解决方案**: 检查配置中的 `source` 和 `targets` 字段是否正确。
+**现象**: `get_adapter_config_for_subgraph()` 返回的配置不正确�? 
+**解决方案**: 检查配置中�?`source` �?`targets` 字段是否正确�?
 
-### 3. 模块不存在
-**现象**: 配置中指定的模块名称在模型中不存在。  
-**解决方案**: 通过 `model.named_modules()` 验证模块是否确实存在。
+### 3. 模块不存�?
+**现象**: 配置中指定的模块名称在模型中不存在�? 
+**解决方案**: 通过 `model.named_modules()` 验证模块是否确实存在�?
 
-### 4. 子图类型不支持
-**现象**: 配置的子图类型不被支持。  
-**解决方案**: 确保配置的子图类型在 `ENABLE_SUBGRAPH_TYPES` 列表中。
+### 4. 子图类型不支�?
+**现象**: 配置的子图类型不被支持�? 
+**解决方案**: 确保配置的子图类型在 `ENABLE_SUBGRAPH_TYPES` 列表中�?
 
 ### 5. 映射关系错误
 **现象**: `MappingConfig` 中的 `source` 和 `targets` 指向错误的模块。  

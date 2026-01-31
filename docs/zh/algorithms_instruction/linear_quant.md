@@ -1,21 +1,51 @@
-# LinearQuantProcess 线性层量化处理器
+# 线性量化算法说明
 
 ## 简介
 
-LinearQuantProcess是modelslim_v1量化服务中的核心处理器，用于对模型的线性层进行量化处理。它支持灵活的量化配置，包括激活值量化和权重量化。
+线性量化（Linear Quantization）是深度学习模型压缩中最基础且广泛应用的算法类别。
+
+在 msModelSlim 中，线性量化通过 `linear_quant` 处理器实现，专门用于对模型的线性层（`torch.nn.Linear` 模块）进行量化处理。它支持对线性层的权重（Weight）和激活值（Activation）进行灵活的量化配置。
+
+## 原理和实现
+
+### 原理
+
+线性量化的核心是将连续的浮点数值范围映射到离散的数值集合中。其基本公式为：
+
+$$Q = \text{clamp}(\text{round}(\frac{V}{S}) + Z, Q_{min}, Q_{max})$$
+
+其中：
+- $V$：原始浮点值。
+- $S$ (Scale)：缩放因子，决定了量化的步长。
+- $Z$ (Zero-point)：偏移量（零点），用于处理非对称分布。
+- $Q$：量化后的数值。
+
+### 实现
+
+在 msModelSlim 中，线性量化通过 `linear_quant` 处理器实现，支持对模型的线性层（Linear/Dense Layers）进行灵活的量化配置。算法在 `msmodelslim/processor/quant/linear.py` 中实现。
+
+### 算法分类
+
+根据参数统计和计算时机的不同，线性量化主要分为以下几类：
+
+1. **静态量化 (Static Quantization)**：
+   - **原理**：在推理前，通过校准数据集（Calibration Dataset）统计激活值的分布，计算并固定 Scale 和 Zero-point。
+   - **优势**：推理时无需动态计算量化参数，性能最优。
+   - **适用场景**：对推理时延极度敏感的生产环境。
+
+2. **动态量化 (Dynamic Quantization)**：
+   - **原理**：在推理过程中，针对每一组输入（如每个 Token 或每个 Batch）动态计算激活值的 Scale 和 Zero-point。
+   - **优势**：能够自适应输入数据的分布变化，精度通常显著高于静态量化。
+   - **适用场景**：对精度要求较高，且模型激活值分布随输入剧烈变化的场景（如大语言模型）。
+
+3. **混合量化 (Mixed/Hybrid Quantization)**：
+   - **原理**：结合静态和动态量化的优点。例如 **PDMIX** 算法，在 Prefilling 阶段使用动态量化以保证首字精度，在 Decoding 阶段使用静态量化以提升生成速度。
 
 ## 使用前准备
 
 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../install_guide.md)。
 
 ## 功能介绍
-
-### 静态量化与动态量化的核心差异
-
-在一键量化中，通过 `qconfig.act.scope` 字段来区分 **静态量化** 与 **动态量化**：
-- **静态量化 (`per_tensor`)**：在量化校准阶段统计并固定量化参数（scale和offset），推理时直接使用。**特点**：推理性能最优，计算开销最小，但在分布变化剧烈时精度可能受损。
-- **动态量化 (`per_token`)**：在推理过程中，针对每个 token 实时计算量化参数。**特点**：量化粒度更细，能够更好地捕捉激活值的动态分布，**精度通常优于静态量化**，但会引入一定的实时计算开销。
-- **PDMIX 混合量化 (`pd_mix`)**：Prefilling 阶段使用 `per_token`，Decoding 阶段使用 `per_tensor`。**特点**：旨在平衡精度和性能，特别适用于生成式模型的推理加速，参考[PDMIX：激活值阶段间混合量化算法说明](../../algorithms_instruction/pdmix.md)。
 
 ### YAML配置示例
 
@@ -73,6 +103,12 @@ LinearQuantProcess是modelslim_v1量化服务中的核心处理器，用于对�
       method: "minmax"         # 量化方法：minmax
   include: [ "*" ]             # 包含所有层
 ```
+#### 静态量化与动态量化的核心差异
+
+在一键量化中，通过 `qconfig.act.scope` 字段来区分 **静态量化** 与 **动态量化**：
+- **静态量化 (`per_tensor`)**：在量化校准阶段统计并固定量化参数（scale和offset），推理时直接使用。**特点**：推理性能最优，计算开销最小，但在分布变化剧烈时精度可能受损。
+- **动态量化 (`per_token`)**：在推理过程中，针对每个 token 实时计算量化参数。**特点**：量化粒度更细，能够更好地捕捉激活值的动态分布，**精度通常优于静态量化**，但会引入一定的实时计算开销。
+- **PDMIX 混合量化 (`pd_mix`)**：Prefilling 阶段使用 `per_token`，Decoding 阶段使用 `per_tensor`。**特点**：旨在平衡精度和性能，特别适用于生成式模型的推理加速，参考[PDMIX：激活值阶段间混合量化算法说明](../../algorithms_instruction/pdmix.md)。
 
 ### YAML配置字段详解
 

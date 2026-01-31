@@ -207,7 +207,7 @@ spec:
 
 ## 层过滤机制
 
-层过滤机制用于指定哪些层需要量化，支持include和exclude模式匹配。详细的过滤规则、匹配模式、示例说明和常见层名模式请参考 [LinearQuantProcess层过滤机制详解](../feature_guide/quick_quantization/linear_quant.md#层过滤机制详解)。
+层过滤机制用于指定哪些层需要量化，支持include和exclude模式匹配。详细的过滤规则、匹配模式、示例说明和常见层名模式请参考 [线性量化层过滤机制详解](linear_quant.md#层过滤机制详解)。
 
 ## 模型适配
 

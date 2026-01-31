@@ -12,6 +12,8 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
 - 未标记“一键量化”的最佳实践请阅读对应模型类别的最佳实践页面并在[example](../../example)目录下对应模型类别的子目录中执行命令，如[DeepSeek](../../example/DeepSeek)、[Qwen3](../../example/Qwen)。
 ## 大语言模型支持列表
 
+<div class="custom-table">
+
 <table>
   <thead>
     <tr>
@@ -670,6 +672,8 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
   </tbody>
 </table>
 
+</div>
+
 **注释说明：**
 - <sup>1</sup> 仅MindIE支持w8a16量化模式。
 - <sup>2</sup> kvcache量化和fa3量化都纳入c8，两者均量化LLM中的k和v缓存；仅MindIE支持c8量化模式，包括w8a8c8和w4a8c8。
@@ -677,6 +681,8 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
 - <sup>4</sup> 仅MindIE支持采用了PDMIX量化方案的最佳实践，如需使用vllm-ascend部署量化模型，请参考[Qwen量化案例](../../example/Qwen/README.md)，通过config_path指定非PDMIX量化方案。
 
 ## 多模态模型支持列表
+
+<div class="custom-table">
 
 <table>
   <thead>
@@ -820,6 +826,23 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
     </tr>
   </tbody>
 </table>
+
+</div>
+
+<style>
+.custom-table table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #dfe2e5;
+}
+.custom-table th, .custom-table td {
+    border: 1px solid #dfe2e5;
+    padding: 8px 12px;
+}
+.custom-table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+</style>
 
 **注释说明：**
 - <sup>1</sup> 压缩后配合Atlas 300I Duo系列产品解压缩特性更佳；仅MindIE支持稀疏量化模式。

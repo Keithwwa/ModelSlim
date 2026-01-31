@@ -1,0 +1,16 @@
+/* 优化左侧边栏目录缩进 */
+
+/* 二级目录缩进 */
+.md-nav__item .md-nav__item .md-nav__link {
+    padding-left: 1.3rem !important;
+}
+
+/* 三级目录缩进 */
+.md-nav__item .md-nav__item .md-nav__item .md-nav__link {
+    padding-left: 1.5rem !important;
+}
+
+/* 调整折叠箭头的边距，防止重叠 */
+.md-nav__item .md-nav__item .md-nav__icon {
+    margin-left: 1.5rem;
+}

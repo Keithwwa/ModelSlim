@@ -82,17 +82,24 @@ msModelSlim 支持多种先进的量化算法，涵盖了从离群值抑制到�
       <td><a href="kvcache_quant.md">查看详情</a></td>
     </tr>
     <tr>
-      <td><strong>LAOS</strong></td>
-      <td>低比特量化</td>
-      <td>针对 W4A4 等极低比特场景的优化</td>
-      <td>极致压缩需求</td>
-      <td><a href="laos.md">查看详情</a></td>
+      <td><strong>GPTQ</strong></td>
+      <td>权重量化优化</td>
+      <td>通过逐列优化和误差补偿最小化量化误差</td>
+      <td>高精度权重量化需求</td>
+      <td><a href="gptq.md">查看详情</a></td>
+    </tr>
+    <tr>
+      <td><strong>Linear Quant</strong></td>
+      <td>基础量化</td>
+      <td>对线性层进行权重量化和激活量化</td>
+      <td>基础量化场景</td>
+      <td><a href="linear_quant.md">查看详情</a></td>
     </tr>
     <tr>
       <td><strong>PDMIX</strong></td>
-      <td>混合精度量化</td>
-      <td>自动选择最优量化位宽</td>
-      <td>精度与性能的平衡</td>
+      <td>混合阶段量化</td>
+      <td>Prefilling 使用动态量化，Decoding 使用静态量化</td>
+      <td>大模型推理加速，平衡精度与性能</td>
       <td><a href="pdmix.md">查看详情</a></td>
     </tr>
     <tr>
@@ -129,6 +136,13 @@ msModelSlim 支持多种先进的量化算法，涵盖了从离群值抑制到�
       <td>迭代搜索最优缩放因子和偏移量</td>
       <td>权重分布不均的精度优化</td>
       <td><a href="ssz.md">查看详情</a></td>
+    </tr>
+    <tr>
+      <td><strong>LAOS</strong></td>
+      <td>低比特量化</td>
+      <td>针对 W4A4 等极低比特场景的优化</td>
+      <td>极致压缩需求</td>
+      <td><a href="laos.md">查看详情</a></td>
     </tr>
   </tbody>
 </table>

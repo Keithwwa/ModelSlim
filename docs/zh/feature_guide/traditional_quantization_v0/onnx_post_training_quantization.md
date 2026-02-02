@@ -14,7 +14,7 @@ ONNX模型的量化可以采用不同的模式，包括Label-Free和Data-Free模
     
 ## 使用前准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 
 注意：当前 ONNX 量化功能暂不支持Python 3.12 及以上版本。 若需使用 ONNX 量化功能，请确保所用 Python 版本低于 3.12。
 

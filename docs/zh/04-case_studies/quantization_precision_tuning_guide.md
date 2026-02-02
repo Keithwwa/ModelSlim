@@ -27,20 +27,20 @@
 步骤5：量化回退（最终手段）
 ```
 
-**核心目标**：  
+**核心目标**： 
 在可接受的精度损失内，实现模型的高效量化部署。
 
 ## 使用前准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 
 ## 调优步骤详解
 
 ### 步骤1：确认精度问题可信
 
-在开始调优前，必须排除环境干扰，确保问题真实存在：
+在开始调优前，必须排除环境干扰，确保问题真实存在。
 
-| 验证项    | 具体操作                        |
+| 验证项   | 具体操作                        |
 |--------|-----------------------------|
 | 推理引擎验证 | 先用浮点模型在目标推理引擎上测评，确认是否能复现原始精度  |
 | 测评结果检查 | 检查量化模型的测评输出，确认无上下文截断、超时等非量化问题 |
@@ -56,13 +56,13 @@
 
 | 算法 | 算法特点 | 适用场景与建议 | 配置示例链接 |
 |------|---------|---------------|-------------|
-| Smooth Quant | 仅对norm-linear子图做平滑处理，支持对称/非对称 | 在Qwen、DeepSeek等热门系列模型上精度较差，不建议使用 | [smooth_quant.md](../algorithms_instruction/smooth_quant.md) |
-| Iterative Smooth | 解决o_proj、down_proj等层因无相邻LayerNorm而无法转移scale的问题。支持对称/非对称 | **优先使用**。运行快，精度较高。超长序列校准集时优先使用。可调整 `alpha` 参数优化 | [iterative_smooth.md](../algorithms_instruction/iterative_smooth.md) |
-| Flex Smooth Quant | 通过二阶段网格搜索自动寻找最优alpha和beta参数，实现更精细的平衡 | 当Iterative Smooth不达标、对量化时间不敏感且显存充足时尝试。运行速度较慢 | [flex_smooth_quant.md](../algorithms_instruction/flex_smooth_quant.md) |
-| Flex AWQ SSZ | 结合 AWQ 和 SSZ 思想，使用真实量化器评估 MSE 误差，自动搜索最优 alpha | **INT4 低比特量化必备**。针对低比特权重量化精度敏感的特点，寻找最优参数。精度提升显著，但运行速度较慢 | [flex_awq_ssz.md](../algorithms_instruction/flex_awq_ssz.md) |
-| QuaRot | 通过对权重和激活进行旋转变换，将离群值"分散"到多个通道，平滑分布 | 可与其他算法叠加使用，作为进一步提升精度的备选方案。对于 W4A4 等极端场景效果显著 | [quarot.md](../algorithms_instruction/quarot.md) |
-| KV Smooth | 专门针对 KVCache 中的 Key 离群值抑制，将其迁移至 Query | **KVCache 量化必备**。在不改变注意力打分前提下压缩 K 的动态范围，提升生成质量 | [kv_smooth.md](../algorithms_instruction/kv_smooth.md) |
-| LAOS | 协同优化方案。通过 QuaRot 和 Iterative Smooth 抑制离群值，配合 AutoRound 优化权重舍入 | **W4A4 极致精度方案**。当前主要适配 Qwen3 稠密系列模型 | [laos.md](../algorithms_instruction/laos.md) |
+| Smooth Quant | 仅对norm-linear子图做平滑处理，支持对称/非对称 | 在Qwen、DeepSeek等热门系列模型上精度较差，不建议使用 | [smooth_quant.md](../feature_guide/quantization_algorithms/smooth_quant.md) |
+| Iterative Smooth | 解决o_proj、down_proj等层因无相邻LayerNorm而无法转移scale的问题。支持对称/非对称 | **优先使用**。运行快，精度较高。超长序列校准集时优先使用。可调整 `alpha` 参数优化 | [iterative_smooth.md](../feature_guide/quantization_algorithms/iterative_smooth.md) |
+| Flex Smooth Quant | 通过二阶段网格搜索自动寻找最优alpha和beta参数，实现更精细的平衡 | 当Iterative Smooth不达标、对量化时间不敏感且显存充足时尝试。运行速度较慢 | [flex_smooth_quant.md](../feature_guide/quantization_algorithms/flex_smooth_quant.md) |
+| Flex AWQ SSZ | 结合 AWQ 和 SSZ 思想，使用真实量化器评估 MSE 误差，自动搜索最优 alpha | **INT4 低比特量化必备**。针对低比特权重量化精度敏感的特点，寻找最优参数。精度提升显著，但运行速度较慢 | [flex_awq_ssz.md](../feature_guide/quantization_algorithms/flex_awq_ssz.md) |
+| QuaRot | 通过对权重和激活进行旋转变换，将离群值"分散"到多个通道，平滑分布 | 可与其他算法叠加使用，作为进一步提升精度的备选方案。对于 W4A4 等极端场景效果显著 | [quarot.md](../feature_guide/quantization_algorithms/quarot.md) |
+| KV Smooth | 专门针对 KVCache 中的 Key 离群值抑制，将其迁移至 Query | **KVCache 量化必备**。在不改变注意力打分前提下压缩 K 的动态范围，提升生成质量 | [kv_smooth.md](../feature_guide/quantization_algorithms/kv_smooth.md) |
+| LAOS | 协同优化方案。通过 QuaRot 和 Iterative Smooth 抑制离群值，配合 AutoRound 优化权重舍入 | **W4A4 极致精度方案**。当前主要适配 Qwen3 稠密系列模型 | [laos.md](../feature_guide/quantization_algorithms/laos.md) |
 
 #### 总结建议
 
@@ -73,7 +73,7 @@
 
 ### 步骤3：量化算法选择
 
-根据量化对象（权重/激活）和比特数选择合适算法。量化算法选择包括权重量化方法选择和激活量化方法选择两部分。
+根据量化对象（权重、激活）和比特数选择合适算法。量化算法选择包括权重量化方法选择和激活量化方法选择两部分。
 
 #### 权重量化方法对比
 
@@ -86,7 +86,7 @@
 
 #### 配置示例 (YAML)
 
-在量化配置文件中，权重量化通常在 `linear_quant` 处理器的 `qconfig.weight` 部分进行配置（`autoround` 则需使用专门的 `autoround_quant` 处理器）：
+在量化配置文件中，权重量化通常在 `linear_quant` 处理器的 `qconfig.weight` 部分进行配置（`autoround` 则需使用专门的 `autoround_quant` 处理器）。
 
 ```yaml
 - type: "linear_quant"         # 处理器类型：线性层量化
@@ -125,21 +125,21 @@
 
 #### 配置示例 (YAML)
 
-在量化配置文件中，激活值量化通常在 `linear_quant` 处理器的 `qconfig.act` 部分进行配置：
+在量化配置文件中，激活值量化通常在 `linear_quant` 处理器的 `qconfig.act` 部分进行配置。
 
 ```yaml
 - type: "linear_quant"         # 处理器类型：线性层量化
   qconfig:
     act:                       # 激活值量化配置
       scope: "per_tensor"      # 静态量化标识：整个张量共用量化参数
-      dtype: "int8"            # 量化数据类型。默认：int8
-      symmetric: false         # 是否对称量化。默认：false
-      method: "minmax"         # 量化方法。默认：minmax
+      dtype: "int8"            # 数据类型：int8
+      symmetric: false         # 是否对称量化：false
+      method: "minmax"         # 量化方法：minmax
     weight:                    # 权重量化配置
       scope: "per_channel"     # 权重量化粒度：逐通道量化
-      dtype: "int8"            # 量化数据类型。默认：int8
-      symmetric: true          # 是否对称量化。默认：true
-      method: "minmax"         # 量化方法。默认：minmax
+      dtype: "int8"            # 数据类型：int8
+      symmetric: true          # 是否对称量化：true
+      method: "minmax"         # 量化方法：minmax
 ```
 
 #### 总结建议
@@ -185,7 +185,7 @@
 
 ##### 第一步：敏感层分析
 
-使用msModelSlim提供的敏感层分析工具识别量化敏感层。详细使用方法请参考[量化敏感层分析使用指南](../feature_guide/quantization_sensitive_layer_analysis/analyze_api_usage.md)。
+使用msModelSlim提供的敏感层分析工具识别量化敏感层。详细使用方法请参考[量化敏感层分析使用指南](../feature_guide/sensitive_layer_analysis/analyze_api_usage.md)。
 
 **功能说明**：
 - **自动评估**：工具会自动评估模型中线性层对量化操作的敏感程度，并为每个可分析对象生成量化敏感度评分。
@@ -215,7 +215,7 @@ spec:
           symmetric: true      # 是否对称量化。默认：true
           method: "minmax"     # 量化方法。默认：minmax
       include: ["*"]           # 包含的层，支持通配符。默认：["*"]
-      exclude: ["*model.layers.*.mlp.down_proj*"] # 排除的层。默认：[]。此处回退所有mlp.down_proj层
+      exclude: ["*model.layers.*.mlp.down_proj*"] # 排除的层。默认：[]。此处回退所有mlp.down_proj层。
 ```
 
 #### 总结建议

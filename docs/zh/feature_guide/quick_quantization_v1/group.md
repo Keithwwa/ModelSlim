@@ -1,14 +1,14 @@
 # 组合处理器 (Group Processor)
 
-## 简�?
+## 简介
 
 组合处理器（Group Processor）是 msModelSlim 中用于实现**精细化量化策略**的核心组件。它允许用户将多个处理器（如线性量化、平滑处理等）封装在一个逻辑组内，针对模型的不同层应用差异化的量化配置。
 
 通过组合处理器，您可以轻松实现“混合量化”（Mixed Quantization），例如在同一个模型中对某些层使用静态量化以追求性能，而对另一些层使用动态量化以保证精度。
 
-## 使用前准�?
+## 使用前准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../install_guide.md)�?
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../install_guide.md)。
 
 ## 原理和实现
 

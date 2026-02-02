@@ -2,7 +2,7 @@
 
 本指南详细介绍了如何使用 msModelSlim V0 接口对大语言模型进行脚本化量化。V0 接口基于 `Calibrator` 和 `AntiOutlier` 等核心类，支持 W8A8、W8A16、W4A16 等多种量化方案。
 
-> **说明**：本指南适用于 V0 脚本化量化。对于更简便的使用体验，建议参考 [一键量化（V1）使用指南](../02-one_click_quantization_v1/usage.md)。
+> **说明**：本指南适用于 V0 脚本化量化。对于更简便的使用体验，建议参考 [一键量化完整指南](../quick_quantization_v1/usage.md)。
 
 ## 目录
 

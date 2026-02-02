@@ -29,7 +29,7 @@ pip install transformers==4.43.1
 msmodelslim quant [ARGS]
 ```
 
-例如，使用一键量化功能量化 Qwen2.5-7B-Instruct 模型，量化方式采用 w8a8 ，则量化命令如下，其中\${MODEL_PATH}为Qwen2.5-7B-Instruct原始浮点权重路径，\${SAVE_PATH}为用户自定义的量化权重保存路径。详细接口说明请参考[一键量化使用指南](../03-feature_guide/02-one_click_quantization_v1/usage.md)。请注意`trust_remote_code`为`True`时可能执行浮点模型权重中代码文件，请确保浮点模型来源安全可靠。
+例如，使用一键量化功能量化 Qwen2.5-7B-Instruct 模型，量化方式采用 w8a8 ，则量化命令如下，其中\${MODEL_PATH}为Qwen2.5-7B-Instruct原始浮点权重路径，\${SAVE_PATH}为用户自定义的量化权重保存路径。详细接口说明请参考[一键量化完整指南](../feature_guide/quick_quantization_v1/usage.md)。请注意`trust_remote_code`为`True`时可能执行浮点模型权重中代码文件，请确保浮点模型来源安全可靠。
 
 ```bash
 msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device npu --model_type Qwen2.5-7B-Instruct --quant_type w8a8 --trust_remote_code True
@@ -58,8 +58,8 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
 
 ### 一键量化支持矩阵
 
-可通过[大模型支持矩阵](foundation_model_support_matrix.md)查看不同模型的一键量化支持情况，其中标记了`一键量化`的模型则已支持一键量化。
+可通过[大模型支持矩阵](../model_support/foundation_model_support_matrix.md)查看不同模型的一键量化支持情况，其中标记了`一键量化`的模型则已支持一键量化。
 
 ### 相关资料
-- 对于过大的模型，可以参考[一键量化使用指南](../03-feature_guide/02-one_click_quantization_v1/usage.md#逐层量化)使用逐层量化，能够明显降低显存使用。
-- 对于一键量化支持的多种算法，可以参考[量化算法](../03-feature_guide/01-quantization_algorithms/README.md)。
+- 对于过大的模型，可以参考[一键量化完整指南](../feature_guide/quick_quantization_v1/usage.md#逐层量化)使用逐层量化，能够明显降低显存使用。
+- 对于一键量化支持的多种算法，可以参考[量化算法](../feature_guide/quantization_algorithms/README.md)。

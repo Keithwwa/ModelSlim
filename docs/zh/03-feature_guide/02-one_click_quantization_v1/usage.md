@@ -1,6 +1,3 @@
----
-toc_depth: 3
----
 # 一键量化完整指南
 
 ## 目录
@@ -62,9 +59,9 @@ msmodelslim quant [ARGS]
 | model_path        | 模型路径      | 必选                | 类型：Str                                                                               |
 | save_path         | 量化权重保存路径  | 必选                | 类型：Str                                                                               |
 | device            | 量化设备      | 可选                | 1. 类型：Str <br>2. 参考值：'npu','npu:0,1,2,3','cpu' <br>3. 默认值为"npu"（单设备）<br>4. 当配置文件启用分布式逐层量化，且指定多个设备时（如：'npu:0,1,2,3'），系统启动DP逐层量化，请确定配置的算法是否支持分布式执行，配置方式及算法支持详见[逐层量化及分布式逐层量化](#逐层量化及分布式逐层量化)|
-| model_type        | 模型名称      | 必选                | 1. 类型：Str <br>2. 大小写敏感，请参考[大模型支持矩阵](../../model_support/foundation_model_support_matrix.md)                                               |  |
-| config_path       | 指定配置路径    | 与"quant_type"二选一  | 1. 类型：Str <br>2. 配置文件格式为yaml <br>3. 当前只支持最佳实践库中已验证的配置，若自定义配置，msModelSlim不为量化结果负责。配置指导可参考[量化配置协议详解](#量化配置协议详解)。 <br> |
-| quant_type        | 量化类型      | 与"config_path"二选一 | w4a8, w4a8c8, w8a8, w8a8s, w8a8c8, w8a16, w16a16s，请参考[大模型支持矩阵](../../model_support/foundation_model_support_matrix.md)                                   |
+| model_type        | 模型名称      | 必选                | 1. 类型：Str <br>2. 大小写敏感，请参考[大模型支持矩阵](../../foundation_model_support_matrix.md)                                               |  |
+| config_path       | 指定配置路径    | 与"quant_type"二选一  | 1. 类型：Str <br>2. 配置文件格式为yaml <br>3. 当前只支持最佳实践库中已验证的配置，若自定义配置，msModelSlim不为量化结果负责。配置指导可参考[配置协议详解](#配置协议详解)。 <br> |
+| quant_type        | 量化类型      | 与"config_path"二选一 | w4a8, w4a8c8, w8a8, w8a8s, w8a8c8，w8a16, w16a16s，请参考[大模型支持矩阵](../../foundation_model_support_matrix.md)                                   |
 | trust_remote_code | 是否信任自定义代码 | 可选                | 1. 类型：Bool，默认值：False <br>2. 请确保加载的自定义代码文件的安全性，设置为True有安全风险。                          |
 | h, help           | 命令行参数帮助信息 | 可选                |               -            |
 
@@ -189,7 +186,7 @@ msmodelslim quant --device npu:0,1,2,3 ...
 
 #### 模型适配
 
-逐层量化支持范围参考[大模型支持矩阵](../../model_support/foundation_model_support_matrix.md) 中支持一键量化的模型。
+逐层量化支持范围参考[大模型支持矩阵](../../foundation_model_support_matrix.md) 中支持一键量化的模型。
 分布式逐层量化继承自逐层量化，因此支持所有逐层量化适配的大语言模型。
 
 **注意**：DP逐层量化暂不支持多模态模型。多模态模型请使用单卡逐层量化（`layer_wise`）。
@@ -238,7 +235,7 @@ spec:                         # 具体的量化服务配置字段
 | 参数           | 可选/必选 | 说明                                                                                                                                                                  | 作用                                |
 |--------------|-------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------|
 | apiversion   | 必选    | 1. 当前支持列表：`"modelslim_v0"`、`"modelslim_v1"`、`"multimodal_vlm_modelslim_v1"`、`"multimodal_sd_modelslim_v1"`。<br> 2. 工具根据此字段选择对应的量化服务后端。<br> 3. 不同版本的量化服务可能有不同的配置字段和参数要求。 | 用于选择后端量化服务的版本，不同的量化服务有着不同的具体配置协议。 |
-| spec         | 必选    | 1. **流水线定义**：指定量化处理的流水线类型。<br> 2. **处理器配置**：定义各种量化处理器的参数。<br>3. **保存策略**：指定量化结果的保存方式和格式 <br>4. **数据集配置**：指定校准数据集                            | 具体的量化服务配置字段，包含量化策略、处理流程和保存方式等所有具体参数。                                 |
+| spec         | 必选    | 1. **流水线定义**：指定量化处理的流水线类型。<br> 2. **处理器配置**：定义各种量化处理器的参数。<br>3. **保存策略**：指定量化结果的保存方式 and 格式 <br>4. **数据集配置**：指定校准数据集                            | 具体的量化服务配置字段，包含量化策略、处理流程和保存方式等所有具体参数。                                 |
 
 **协议版本维护策略**：
 
@@ -290,13 +287,13 @@ modelslim_v1是量化工具推出的新一代量化处理框架，目前正在�
 
 | 处理器 | 处理器类型 | 配置示例 | 配置字段详解 |
 | :--- | :--- | :--- | :--- |
-| SmoothQuant | 离群值抑制 | [SmoothQuant 配置示例](../quantization_algorithms/smooth_quant.md#yaml配置示例) | [配置字段详解](../quantization_algorithms/smooth_quant.md#yaml配置字段详解) |
-| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../quantization_algorithms/iterative_smooth.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/iterative_smooth.md#yaml配置字段详解) |
-| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../quantization_algorithms/flex_smooth_quant.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/flex_smooth_quant.md#yaml配置字段详解) |
-| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../quantization_algorithms/flex_awq_ssz.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/flex_awq_ssz.md#yaml配置字段详解) |
-| KV Smooth | 离群值抑制 | [KV Smooth 配置示例](../quantization_algorithms/kv_smooth.md#yaml配置示例) | [KV Smooth 配置字段详解](../quantization_algorithms/kv_smooth.md#yaml配置字段详解) |
-| QuaRot | 离群值抑制 | [QuaRot 配置示例](../quantization_algorithms/quarot.md#yaml配置示例) | [QuaRot 配置字段详解](../quantization_algorithms/quarot.md#yaml配置字段详解) |
-| linear_quant | 量化 | [线性量化配置示例](../quantization_algorithms/linear_quant.md#yaml配置示例) | [线性量化配置字段详解](../quantization_algorithms/linear_quant.md#yaml配置字段详解) |
+| SmoothQuant | 离群值抑制 | [SmoothQuant 配置示例](../../algorithms_instruction/smooth_quant.md#yaml配置示例) | [配置字段详解](../../algorithms_instruction/smooth_quant.md#yaml配置字段详解) |
+| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../../algorithms_instruction/iterative_smooth.md#yaml配置示例) | [ 配置字段详解](../../algorithms_instruction/iterative_smooth.md#yaml配置字段详解) |
+| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../../algorithms_instruction/flex_smooth_quant.md#yaml配置示例) | [ 配置字段详解](../../algorithms_instruction/flex_smooth_quant.md#yaml配置字段详解) |
+| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../../algorithms_instruction/flex_awq_ssz.md#yaml配置示例) | [ 配置字段详解](../../algorithms_instruction/flex_awq_ssz.md#yaml配置字段详解) |
+| KV Smooth | 离群值抑制 | [KV Smooth 配置示例](../../algorithms_instruction/kv_smooth.md#yaml配置示例) | [KV Smooth 配置字段详解](../../algorithms_instruction/kv_smooth.md#yaml配置字段详解) |
+| QuaRot | 离群值抑制 | [QuaRot 配置示例](../../algorithms_instruction/quarot.md#yaml配置示例) | [QuaRot 配置字段详解](../../algorithms_instruction/quarot.md#yaml配置字段详解) |
+| linear_quant | 量化 | [线性量化配置示例](../../algorithms_instruction/linear_quant.md#yaml配置示例) | [线性量化配置字段详解](../../algorithms_instruction/linear_quant.md#yaml配置字段详解) |
 | group | 量化 | [group 配置示例](group.md/#yaml配置示例) | [group 配置字段详解](group.md/#yaml配置字段详解) |
 | KVCache Quant | 量化 | [KVCache Quant 配置示例](../quantization_algorithms/kvcache_quant.md#yaml配置示例) | [KVCache Quant 配置字段详解](../quantization_algorithms/kvcache_quant.md#yaml配置字段详解) |
 | FA3 Quant | 量化 | [FA3 Quant 配置示例](../quantization_algorithms/fa3_quant.md#yaml配置示例) | [FA3 Quant 配置字段详解](../quantization_algorithms/fa3_quant.md#yaml配置字段详解) |
@@ -661,8 +658,8 @@ modelslim_v0量化服务主要由Calibrator、AntiOutlier等旧版接口组成�
 
 **相关文档**:
 
-- [Calibrator.md](../../python_api_v0/foundation_model_compression_apis/foundation_model_quantization_apis/pytorch_Calibrator.md)
-- [AntiOutlier.md](../../python_api_v0/foundation_model_compression_apis/foundation_model_quantization_apis/AntiOutlier.md)
+- [Calibrator.md](../../../python_api/foundation_model_compression_apis/foundation_model_quantization_apis/pytorch_Calibrator.md)
+- [AntiOutlier.md](../../../python_api/foundation_model_compression_apis/foundation_model_quantization_apis/AntiOutlier.md)
 
 **注意**：modelslim_v0协议版本即将废弃，不推荐使用。建议使用modelslim_v1或更新的协议版本。
 
@@ -671,7 +668,7 @@ modelslim_v0量化服务主要由Calibrator、AntiOutlier等旧版接口组成�
 ### 相关资料
 
 - 对于过大的模型，可以参考[逐层量化及分布式逐层量化](#逐层量化及分布式逐层量化)使用逐层量化，能够明显降低显存使用。
-- 对于一键量化支持的多种算法，可以参考[一键量化V1架构支持的算法](../quantization_algorithms/README.md)。
+- 对于一键量化支持的多种算法，可以参考[一键量化V1架构支持的算法](../../algorithms_instruction/)。
 
 ### 常见问题
 

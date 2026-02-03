@@ -2,7 +2,7 @@
 
 ## 简介
 
-- **简介**：KVCache量化机制。
+- **简介**：KVCache量化机制。KV Cache 量化通常与[线性量化](linear_quant.md)配合使用，以实现全量化方案。
 - **问题**：在大模型推理中，KVCache 存储的 Key/Value 状态占用大量显存，随序列长度线性增长，成为推理瓶颈。
 - **目标**：对写入 KVCache 的 `key_states` 和 `value_states` 进行量化，在保持生成质量的前提下显著降低缓存内存占用。
 

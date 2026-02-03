@@ -1,9 +1,30 @@
-# 欢迎来到 msModelSlim
-MindStudio ModelSlim（昇腾模型压缩工具，msModelSlim），一个以加速为目标、压缩为技术、昇腾为根本的亲和压缩工具。包含量化和压缩等一系列推理优化技术，旨在加速大语言稠密模型、MoE模型、多模态理解模型、多模态生成模型等。
+<p align="center">
+  <svg width="600" height="120" viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#008080;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#48D1CC;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <rect width="600" height="120" rx="15" fill="none" />
+    <text x="50%" y="65" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="64" font-weight="800" fill="url(#logoGrad)" text-anchor="middle" dominant-baseline="middle" letter-spacing="2">ModelSlim</text>
+    <path d="M150 95 L450 95" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="10,20" />
+  </svg>
+</p>
 
-昇腾 AI 开发者可通过调用 msModelSlim 提供的丰富 Python API，灵活实现算法适配与模型压缩，支持多种格式的权重导出及全流程的精度、性能调优。经过优化后的模型可无缝接入 MindIE、vLLM Ascend 等主流推理框架，在昇腾 AI 处理器上实现高效部署。
+# 欢迎来到 msModelSlim 
 
-## 最新消息
+MindStudio ModelSlim（昇腾模型压缩工具，msModelSlim），一个以加速为目标、压缩为技术、昇腾为根本的亲和压缩工具。包含量化和压缩等一系列推理优化技术，旨在加速大语言稠密模型、MoE模型、多模态理解模型、多模态生成模型等。 :computer:
+
+昇腾 AI 开发者可通过调用 msModelSlim 提供的丰富 Python API，灵活实现算法适配与模型压缩，支持多种格式的权重导出及全流程的精度、性能调优。经过优化后的模型可无缝接入 MindIE、vLLM Ascend 等主流推理框架，在昇腾 AI 处理器上实现高效部署。 :zap:
+
+## :star: 核心优势
+
+*   **高效压缩** :package: —— 支持多种量化算法，显著降低显存占用。
+*   **昇腾亲和** :processor: —— 深度适配昇腾硬件，确保最佳推理性能。
+*   **简单易用** :magic_wand: —— 丰富的模型最佳实践库，快速实现模型优化。
+
+## :loudspeaker: 最新消息
 ### 2025年12月
 - msModelSlim 支持量化精度反馈自动调优，可根据精度需求自动搜索最优量化配置
 - msModelSlim 支持自主量化多模态理解模型，支持多模态理解模型的量化接入

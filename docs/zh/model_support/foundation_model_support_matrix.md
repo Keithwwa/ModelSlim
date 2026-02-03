@@ -12,6 +12,9 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
 - 未标记“一键量化”的最佳实践请阅读对应模型类别的最佳实践页面并在[example](../../example)目录下对应模型类别的子目录中执行命令，如[DeepSeek](../../example/DeepSeek)、[Qwen3](../../example/Qwen)。
 ## 大语言模型支持列表
 
+!!! info "提示"
+    下表内容较多，若显示不全，您可以**按住鼠标滚轮**或使用**底部滚动条**左右拖动查看。
+
 <div class="custom-table">
 
 <table>

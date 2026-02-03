@@ -46,7 +46,7 @@ nav:
       - Standing High: "zh/feature_guide/quantization_algorithms/standing_high.md"
     - 一键量化 (V1):
       - 使用指南: "zh/feature_guide/quick_quantization_v1/usage.md"
-      - 线性层量化: "zh/feature_guide/quick_quantization_v1/linear_quant.md"
+      - 线性层量化: "zh/feature_guide/quantization_algorithms/linear_quant.md"
       - Group量化: "zh/feature_guide/quick_quantization_v1/group.md"
     - 传统量化 (V0):
       - 概览: "zh/feature_guide/traditional_quantization_v0/README.md"

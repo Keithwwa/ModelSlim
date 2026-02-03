@@ -9,7 +9,7 @@ theme:
     - search.highlight
     - content.code.copy
 
-repo_url: https://gitcode.com/keith_wa/msmodelslim
+repo_url: https://gitcode.com/Ascend/msmodelslim
 edit_uri: edit/master/docs/zh/
 
 extra_css:

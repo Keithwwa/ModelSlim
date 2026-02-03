@@ -19,7 +19,7 @@ nav:
   - Home: index.md
   - 一、开始使用:
     - 安装指南: "zh/getting_started/install_guide.md"
-    - 快速入门: "zh/getting_started/quick_start.md"
+    - 快速入门: "zh/getting_started/quantization_quick_start.md"
     - 常见问题: "zh/getting_started/faq.md"
     - 版本说明: "zh/getting_started/release_notes.md"
     - 安全声明: "zh/getting_started/security_statement.md"
@@ -48,7 +48,7 @@ nav:
       - Standing High: "zh/feature_guide/quantization_algorithms/standing_high.md"
     - 一键量化 (V1):
       - 使用指南: "zh/feature_guide/quick_quantization_v1/usage.md"
-      - Group量化: "zh/feature_guide/quick_quantization_v1/group.md"
+      - 组合处理器: "zh/feature_guide/quick_quantization_v1/group.md"
     - 传统量化 (V0):
       - 概览: "zh/feature_guide/traditional_quantization_v0/README.md"
       - PyTorch 大模型脚本量化: "zh/feature_guide/traditional_quantization_v0/pytorch_foundation_model_quant.md"

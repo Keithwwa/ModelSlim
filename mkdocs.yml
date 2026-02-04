@@ -73,6 +73,7 @@ nav:
   - 五、开发者指南:
     - 模型接入指南: "zh/developer_guide/integrating_models.md"
     - 多模态理解模型接入: "zh/developer_guide/integrating_multimodal_understanding_model.md"
+    - 项目目录结构: "zh/dir_structure.md"
   - 六、Python API:
     - 传统 V0 API:
       - 公共接口: "zh/python_api_v0/common_apis.md"

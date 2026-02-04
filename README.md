@@ -92,8 +92,7 @@ msModelSlim的版本说明包含msModelSlim的软件版本配套关系和软件�
 
 ## 环境部署
 
-具体安装步骤请查看[《msModelSlim工具安装指南》](https://modelslim.readthedocs.io/zh-cn/latest/zh/getting_started/install_guide/
-)。
+具体安装步骤请查看[《msModelSlim工具安装指南》](https://modelslim.readthedocs.io/zh-cn/latest/zh/getting_started/install_guide/)。
 
 ## 快速入门
 

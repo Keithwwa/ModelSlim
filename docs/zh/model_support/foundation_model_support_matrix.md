@@ -832,20 +832,5 @@ msmodelslim quant --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --device n
 
 </div>
 
-<style>
-.custom-table table {
-    border-collapse: collapse;
-    width: 100%;
-    border: 1px solid #dfe2e5;
-}
-.custom-table th, .custom-table td {
-    border: 1px solid #dfe2e5;
-    padding: 8px 12px;
-}
-.custom-table tr:nth-child(2n) {
-    background-color: #f6f8fa;
-}
-</style>
-
 **注释说明：**
 - <sup>1</sup> 压缩后配合Atlas 300I Duo系列产品解压缩特性更佳；仅MindIE支持稀疏量化模式。

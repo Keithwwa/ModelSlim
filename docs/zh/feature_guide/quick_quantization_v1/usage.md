@@ -290,19 +290,19 @@ modelslim_v1是量化工具推出的新一代量化处理框架，目前正在�
 
 | 处理器 | 处理器类型 | 配置示例 | 配置字段详解 |
 | :--- | :--- | :--- | :--- |
-| SmoothQuant | 离群值抑制 | [SmoothQuant 配置示例](../quantization_algorithms/smooth_quant.md#yaml配置示例) | [配置字段详解](../quantization_algorithms/smooth_quant.md#yaml配置字段详解) |
-| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../quantization_algorithms/iterative_smooth.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/iterative_smooth.md#yaml配置字段详解) |
-| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../quantization_algorithms/flex_smooth_quant.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/flex_smooth_quant.md#yaml配置字段详解) |
-| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../quantization_algorithms/flex_awq_ssz.md#yaml配置示例) | [ 配置字段详解](../quantization_algorithms/flex_awq_ssz.md#yaml配置字段详解) |
-| KV Smooth | 离群值抑制 | [KV Smooth 配置示例](../quantization_algorithms/kv_smooth.md#yaml配置示例) | [KV Smooth 配置字段详解](../quantization_algorithms/kv_smooth.md#yaml配置字段详解) |
-| QuaRot | 离群值抑制 | [QuaRot 配置示例](../quantization_algorithms/quarot.md#yaml配置示例) | [QuaRot 配置字段详解](../quantization_algorithms/quarot.md#yaml配置字段详解) |
-| linear_quant | 量化 | [线性量化配置示例](../quantization_algorithms/linear_quant.md#yaml配置示例) | [线性量化配置字段详解](../quantization_algorithms/linear_quant.md#yaml配置字段详解) |
+| SmoothQuant | 离群值抑制 | [SmoothQuant 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md#yaml配置示例) | [配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md#yaml配置字段详解) |
+| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置字段详解) |
+| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置字段详解) |
+| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置字段详解) |
+| KV Smooth | 离群值抑制 | [KV Smooth 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md#yaml配置示例) | [KV Smooth 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md#yaml配置字段详解) |
+| QuaRot | 离群值抑制 | [QuaRot 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/quarot.md#yaml配置示例) | [QuaRot 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/quarot.md#yaml配置字段详解) |
+| linear_quant | 量化 | [线性量化配置示例](../../quantization_algorithms/quantization_algorithms/linear_quant.md#yaml配置示例) | [线性量化配置字段详解](../../quantization_algorithms/quantization_algorithms/linear_quant.md#yaml配置字段详解) |
 | group | 量化 | [group 配置示例](group.md/#yaml配置示例) | [group 配置字段详解](group.md/#yaml配置字段详解) |
-| KVCache Quant | 量化 | [KVCache Quant 配置示例](../quantization_algorithms/kvcache_quant.md#yaml配置示例) | [KVCache Quant 配置字段详解](../quantization_algorithms/kvcache_quant.md#yaml配置字段详解) |
-| FA3 Quant | 量化 | [FA3 Quant 配置示例](../quantization_algorithms/fa3_quant.md#yaml配置示例) | [FA3 Quant 配置字段详解](../quantization_algorithms/fa3_quant.md#yaml配置字段详解) |
-| Float Sparse | 量化 | [Float Sparse 配置示例](../quantization_algorithms/float_sparse.md#yaml配置示例) | [Float Sparse 配置字段详解](../quantization_algorithms/float_sparse.md#yaml配置字段详解) |
-| AutoRound | 量化 | [AutoRound 配置示例](../quantization_algorithms/autoround.md#yaml配置示例) | [AutoRound 配置字段详解](../quantization_algorithms/autoround.md#yaml配置字段详解) |
-| LAOS (W4A4方案) | 综合方案 | [LAOS 配置示例](../quantization_algorithms/laos.md#yaml配置示例) | [LAOS 配置字段详解](../quantization_algorithms/laos.md#yaml配置字段详解) |
+| KVCache Quant | 量化 | [KVCache Quant 配置示例](../../quantization_algorithms/quantization_algorithms/kvcache_quant.md#yaml配置示例) | [KVCache Quant 配置字段详解](../../quantization_algorithms/quantization_algorithms/kvcache_quant.md#yaml配置字段详解) |
+| FA3 Quant | 量化 | [FA3 Quant 配置示例](../../quantization_algorithms/quantization_algorithms/fa3_quant.md#yaml配置示例) | [FA3 Quant 配置字段详解](../../quantization_algorithms/quantization_algorithms/fa3_quant.md#yaml配置字段详解) |
+| Float Sparse | 量化 | [Float Sparse 配置示例](../../quantization_algorithms/quantization_algorithms/float_sparse.md#yaml配置示例) | [Float Sparse 配置字段详解](../../quantization_algorithms/quantization_algorithms/float_sparse.md#yaml配置字段详解) |
+| AutoRound | 量化 | [AutoRound 配置示例](../../quantization_algorithms/quantization_algorithms/autoround.md#yaml配置示例) | [AutoRound 配置字段详解](../../quantization_algorithms/quantization_algorithms/autoround.md#yaml配置字段详解) |
+| LAOS (W4A4方案) | 综合方案 | [LAOS 配置示例](../../quantization_algorithms/quantization_algorithms/laos.md#yaml配置示例) | [LAOS 配置字段详解](../../quantization_algorithms/quantization_algorithms/laos.md#yaml配置字段详解) |
 
 #### save - 保存器配置字段
 
@@ -671,7 +671,7 @@ modelslim_v0量化服务主要由Calibrator、AntiOutlier等旧版接口组成�
 ### 相关资料
 
 - 对于过大的模型，可以参考[逐层量化及分布式逐层量化](#逐层量化及分布式逐层量化)使用逐层量化，能够明显降低显存使用。
-- 对于一键量化支持的多种算法，可以参考[一键量化V1架构支持的算法](../quantization_algorithms/README.md)。
+- 对于一键量化支持的多种算法，可以参考[一键量化V1架构支持的算法](../../quantization_algorithms/README.md)。
 
 ### 常见问题
 

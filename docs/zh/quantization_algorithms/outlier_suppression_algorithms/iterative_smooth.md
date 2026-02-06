@@ -1,33 +1,31 @@
-# Flex Smooth Quant：灵活平滑量化算法说明
+# Iterative Smooth：离群值抑制算法说明
 
 ## 简介
 
-- **概述**：Flex Smooth Quant（灵活平滑量化）是一种用于大语言模型量化过程中抑制激活离群值的算法。该算法通过动态调整权重和激活的缩放因子，在保持模型精度的同时，有效减少量化误差。与传统的平滑算法不同，Flex Smooth Quant提供了更灵活的参数配置，能够根据不同的模型架构和量化需求进行自适应调整。
-- **核心思想**：Flex Smooth Quant算法的核心思想是通过二阶段网格搜索，自动搜索最佳的alpha和beta参数，在激活和权重之间实现更精细的平衡，从而在不同的量化场景下获得精度与量化效率的平衡。
+- **概述**：Iterative Smooth（迭代平滑）是一种用于大语言模型量化过程中抑制激活离群值的算法。该算法通过动态调整权重和激活的缩放因子，在保持模型精度的同时，有效减少量化误差。
+- **核心思想**：Iterative Smooth算法的核心思想是通过在相邻层之间重新分配量化误差，使得激活值的分布更加均匀，从而减少离群值对量化精度的影响。
 
 ## 使用前准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 
 ## 原理和实现
 
 ### 原理
 
-Flex Smooth Quant算法使用以下公式计算平滑缩放因子：
+算法使用以下公式计算平滑缩放因子：
 
 ```
-scales = (A_scale**alpha / W_scale**beta).clamp(min=1e-5)
+scales = (A_scale**α / W_scale**(1-α)).clamp(min=scale_min)
 ```
 
 其中：
-- `A_scale`：激活值的缩放因子。
-- `W_scale`：权重的缩放因子（取每列的最大值）。
-- `alpha`：激活缩放的系数，控制激活对缩放因子的影响程度（0-1之间）。
-- `beta`：权重缩放的系数，控制权重对缩放因子的影响程度（0-1之间）。
+- `A_scale`：激活值的缩放因子
+- `W_scale`：权重的缩放因子（取每列的最大值）
+- `α`：平衡参数，控制激活和权重的相对重要性（默认值：0.9）
+- `scale_min`：缩放因子的最小值（默认值：1e-5）
 
 ### 支持的子图类型
-
-Flex Smooth Quant算法支持与Iterative Smooth相同的四种标准子图类型：
 
 #### 1. NormLinearSubgraph（归一化-线性子图）
 
@@ -39,9 +37,9 @@ y = torch.cat([linear(x) for linear in linears], dim=-1)
 ```
 
 **处理方式：**
-- 计算所有线性层权重的列最大值作为权重缩放因子。
-- 对每个线性层应用正向缩放。
-- 对归一化层应用反向缩放（1/scales）。
+- 计算所有线性层权重的列最大值作为权重缩放因子
+- 对每个线性层应用正向缩放
+- 对归一化层应用反向缩放（1/scales）
 
 #### 2. LinearLinearSubgraph（线性-线性子图）
 
@@ -52,9 +50,9 @@ y = linear2(linear1(x))
 ```
 
 **处理方式：**
-- 基于linear2的权重计算缩放因子。
-- 对linear2应用正向缩放。
-- 对linear1应用反向缩放（1/scales）。
+- 基于linear2的权重计算缩放因子
+- 对linear2应用正向缩放
+- 对linear1应用反向缩放（1/scales）
 
 #### 3. OVSubgraph（注意力输出-值子图）
 
@@ -64,9 +62,9 @@ y = linear2(linear1(x))
 - 支持GQA（分组查询注意力）
 
 **处理方式：**
-- 基于o_proj权重计算缩放因子。
-- 对o_proj应用正向缩放。
-- 对v_proj应用反向缩放（1/scales）。
+- 基于o_proj权重计算缩放因子
+- 对o_proj应用正向缩放
+- 对v_proj应用反向缩放（1/scales）
 
 #### 4. UpDownSubgraph（上投影-下投影子图）
 
@@ -77,13 +75,13 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 ```
 
 **处理方式：**
-- 基于down_proj权重计算缩放因子。
-- 对down_proj应用正向缩放。
-- 对up_proj应用反向缩放（1/scales）。
+- 基于down_proj权重计算缩放因子
+- 对down_proj应用正向缩放
+- 对up_proj应用反向缩放（1/scales）
 
 ### 实现
 
-算法在 `msmodelslim/processor/anti_outlier/flex_smooth/processor.py` 中实现，处理流程分两阶段：
+算法在 `msmodelslim/processor/anti_outlier/iter_smooth/processor.py` 中实现，处理流程分两阶段：
 
 #### 1) 预处理阶段（preprocess）
 
@@ -94,8 +92,10 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 **统计信息收集：**
 - 为所有子图中的线性模块安装前向钩子（forward hook）。
 - 钩子在 `[batch, seq, hidden_dim]` 维度上收集激活值统计信息：
-  - **激活张量数据**：收集完整的激活张量，用于后续平滑计算。
-  - **每通道绝对最大值**：计算激活值的每通道绝对最大值，作为平滑缩放因子的基础。
+  - 每通道的最大值、最小值
+  - 每通道的绝对最大值（用于平滑缩放计算）
+  - 通道偏移量（用于对称量化）
+- 支持分布式训练环境下的统计信息聚合。
 
 #### 2) 后处理阶段（postprocess）
 
@@ -104,28 +104,29 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 - 每种子图类型调用相应的平滑处理方法。
 
 **子图平滑处理：**
-- **Norm-Linear子图**：对归一化层和后续线性层应用平滑。
+- **Norm-Linear子图**：对归一化层和后续线性层应用平滑，支持RMSNorm偏置调整。
 - **Linear-Linear子图**：对两个线性层应用平滑，调整权重和偏置。
 - **OV子图**：处理注意力机制中的输出投影（Output projection）和值投影（Value projection）之间的连接关系，支持QKV融合模式。
 - **Up-Down子图**：处理MLP门控机制，对上下投影层应用平滑。
 
-**Flex Smooth Quant算法核心：**
+**平滑算法核心：**
 - 基于收集的激活统计信息计算每通道的缩放因子。
-- 使用 `flex_smooth_quant` 算法对子图进行灵活平滑量化优化。
-- 支持可配置的平滑参数：`alpha`（激活缩放系数）、`beta`（权重缩放系数），若用户不配置的话，采用二阶段网格搜索方法搜索最佳alpha和beta参数。
+- 使用 `iter_smooth` 算法对子图进行迭代平滑优化。
+- 支持可配置的平滑参数：`alpha`（平滑强度）、`scale_min`（最小缩放）、`symmetric`（对称量化）。
 
 **资源清理：**
-- 清理所有安装的统计钩子。
-- 释放统计信息内存。
-- 恢复模型原始状态。
+- 清理所有安装的统计钩子
+- 释放统计信息内存
+- 恢复模型原始状态
 
 ## 适用要求
 
-- **模型架构要求**：模型必须支持 `FlexSmoothQuantInterface` 接口，并正确配置子图映射关系。
+- **模型架构要求**：模型必须支持 `IterSmoothInterface` 接口，并正确配置子图映射关系。
 - **模块命名要求**：模块名称必须与 `named_modules()` 返回的完整路径完全一致。
 - **子图类型支持**：目前支持四种标准子图类型：`norm-linear`、`linear-linear`、`ov`、`up-down`。
-- **模块属性要求**：目标模块必须存在且具备可写的 `weight`，其他自定义模块暂不支持。
+- **模块属性要求**：目标模块必须存在且具备可写的 `weight`（以及可选 `bias`），其他自定义模块暂不支持。
 - **模型结构假设**：算法基于标准的Transformer架构设计，对于非标准结构需要谨慎评估适用性。
+
 
 ## 功能介绍
 ### 使用说明
@@ -133,17 +134,18 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 作为 Processor 使用
 
 ```yaml
-- type: "flex_smooth_quant"           # 固定为 `flex_smooth_quant`，用于指定 Processor。
-  alpha: 0.8                          # 浮点数, 0-1之间，默认 None，通过算法自动搜索最佳alpha，也支持用户自行配置，激活缩放的系数。
-  beta: 0.7                           # 浮点数, 0-1之间，默认 None，通过算法自动搜索最佳beta，也支持用户自行配置，权重缩放的系数。
-  enable_subgraph_type:               # 字符串列表，指定启用的子图类型，默认启用所有四种类型。
+- type: "iter_smooth"                    # 固定为 `iter_smooth`，用于指定 Processor。
+  alpha: 0.9                             # 浮点数, > 0, 默认 0.9，平衡参数，控制激活和权重的相对重要性。
+  scale_min: 1e-5                        # 浮点数, > 0, 默认 1e-5，缩放因子的下界，防止数值过小导致数值不稳定。
+  symmetric: True                        # 布尔型，默认为True，是否启用对称，True为对称，False为非对称。
+  enable_subgraph_type:                  # 字符串列表，代表开启的子图类型。
     - 'norm-linear'
     - 'linear-linear'
     - 'ov'
     - 'up-down'
-  include:                            # 包含的层，支持通配符。
+  include:                                # 包含的层，支持通配符。
     - "*"
-  exclude:                            # 排除的层，支持通配符。
+  exclude:                                # 排除的层，支持通配符。
     - "*self_attn*"
 ```
 
@@ -152,28 +154,30 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
 ```yaml
 spec:
   process:
-    - type: "flex_smooth_quant"
-      alpha: 0.8                          # 激活缩放的权重系数，0-1之间，默认None（自动搜索）。
-      beta: 0.7                           # 权重缩放的权重系数，0-1之间，默认None（自动搜索）。
-      enable_subgraph_type:               # 开启的子图类型。
+    - type: "iter_smooth"
+      alpha: 0.9                           # 平衡参数，控制激活和权重的相对重要性，默认0.9。
+      scale_min: 1e-5                      # 缩放因子的最小值，防止数值不稳定，默认1e-5。
+      symmetric: True                     # 是否启用对称量化，默认True。
+      enable_subgraph_type:                # 开启的子图类型。
         - 'norm-linear'
         - 'linear-linear'
         - 'ov'
         - 'up-down'
-      include: ["*"]                      # 包含的层，支持通配符。
-      exclude: ["*self_attn*"]            # 排除的层，支持通配符。
+      include: ["*"]                       # 包含的层，支持通配符。
+      exclude: ["*self_attn*"]             # 排除的层，支持通配符。
 ```
 
 ### YAML配置字段详解
 
-| 字段名 | 作用 | 说明 |
-|--------|------|------|
-| type | 处理器类型标识 | 固定值"flex_smooth_quant"，用于标识这是一个灵活平滑量化处理器。 |
-| alpha | 激活缩放权重系数 | 0-1之间的浮点数，控制激活对缩放因子的影响程度，默认None（自动搜索）。 |
-| beta | 权重缩放权重系数 | 0-1之间的浮点数，控制权重对缩放因子的影响程度，默认None（自动搜索）。 |
-| enable_subgraph_type | 开启的子图类型 | 支持的子图类型列表，包括"norm-linear"、"linear-linear"、"ov"、"up-down" 。|
-| include | 包含的层 | 支持通配符匹配。 |
-| exclude | 排除的层 | 支持通配符匹配。 |
+| 字段名 | 作用      | 说明 |
+|--------|---------|------|
+| type | 处理器类型标识 | 固定值"iter_smooth"，用于标识这是一个迭代平滑处理器。|
+| alpha | 平衡参数    | 大于0的浮点数，控制激活和权重的相对重要性，默认0.9。 |
+| scale_min | 缩放因子最小值 | 大于0的浮点数，防止数值不稳定，默认1e-5。 |
+| symmetric | 是否对称量化  | 布尔值，True为对称，False为非对称，默认True。 |
+| enable_subgraph_type | 开启的子图类型 | 支持的子图类型列表，包括"norm-linear"、"linear-linear"、"ov"、"up-down"。 |
+| include | 包含的层  | 支持通配符匹配。 |
+| exclude | 排除的层  | 支持通配符匹配。|
 
 ## 模型适配
 
@@ -205,13 +209,13 @@ class AdapterConfig:
     mapping: Optional[MappingConfig] = None  # 模块映射关系
     fusion: FusionConfig = field(default_factory=lambda: FusionConfig())  # 融合配置
 
-# 模型适配Flex Smooth Quant算法接口
-class FlexSmoothQuantInterface(ABC):
+# 模型适配Smooth算法接口
+class IterSmoothInterface(ABC):
     @abstractmethod
     def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
         """
-        返回模型中所有可进行Flex Smooth Quant处理的子图配置
-
+        返回模型中所有可进行Smooth处理的子图配置
+        
         Returns:
             List[AdapterConfig]: 子图配置列表，每个配置包含：
                 - subgraph_type: 子图类型
@@ -224,14 +228,14 @@ class FlexSmoothQuantInterface(ABC):
 ### 适配步骤
 
 **前置要求：**
-- 模型需要继承 `FlexSmoothQuantInterface` 接口。
+- 模型需要继承 `IterSmoothInterface` 接口。
 - 模块名称必须与 `named_modules()` 返回的完整路径一致。
 - 支持的子图类型：`norm-linear`、`linear-linear`、`ov`、`up-down`。
 - 配置中的`subgraph_type`、`mapping` 是必要参数。
 - 当配置`FusionConfig`且`fusion_type`为qkv时，必须给出num_attention_heads和num_key_value_heads。
 
 **步骤：**
-1. **继承接口**：模型适配器继承 `FlexSmoothQuantInterface` 接口，实现 `get_adapter_config_for_subgraph()` 方法。
+1. **继承接口**：模型适配器继承 `IterSmoothInterface` 接口，实现 `get_adapter_config_for_subgraph()` 方法。
 2. **配置子图映射**：为每层配置四种类型的子图映射关系：
    - **Norm-Linear子图**：归一化层到后续线性层的映射
    - **OV子图**：注意力机制中V投影到O投影的映射
@@ -256,12 +260,12 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
                 source=f"model.layers.{layer_idx}.input_layernorm",
                 targets=[
                     f"model.layers.{layer_idx}.self_attn.q_proj",
-                    f"model.layers.{layer_idx}.self_attn.k_proj",
+                    f"model.layers.{layer_idx}.self_attn.k_proj", 
                     f"model.layers.{layer_idx}.self_attn.v_proj"
                 ]
             )
         )
-
+        
         # 2. 后注意力层归一化到MLP投影的Norm-Linear映射
         norm_linear_config2 = AdapterConfig(
             subgraph_type="norm-linear",
@@ -273,7 +277,7 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
                 ]
             )
         )
-
+        
         # 3. 注意力机制中的OV映射
         ov_config = AdapterConfig(
             subgraph_type="ov",
@@ -282,7 +286,7 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
                 targets=[f"model.layers.{layer_idx}.self_attn.o_proj"]
             )
         )
-
+        
         # 4. MLP门控机制的Up-Down映射
         up_down_config = AdapterConfig(
             subgraph_type="up-down",
@@ -291,9 +295,9 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
                 targets=[f"model.layers.{layer_idx}.mlp.down_proj"]
             )
         )
-
+        
         adapter_config.extend([norm_linear_config1, norm_linear_config2, ov_config, up_down_config])
-
+    
     return adapter_config
 ```
 
@@ -314,6 +318,6 @@ def get_adapter_config_for_subgraph(self) -> List[AdapterConfig]:
 **现象**: 配置的子图类型不被支持。  
 **解决方案**: 确保配置的子图类型在 `ENABLE_SUBGRAPH_TYPES` 列表中。
 
-### 6. 映射关系错误
+### 5. 映射关系错误
 **现象**: `MappingConfig` 中的 `source` 和 `targets` 指向错误的模块。  
 **解决方案**: 检查 `MappingConfig` 中的 `source` 和 `targets` 是否指向正确的模块。

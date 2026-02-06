@@ -19,7 +19,7 @@ AutoGPTQ：GPU
 
 ### 前期准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../getting_started/install_guide.md)。
 
 参考大模型量化中的[使用前准备](../feature_guide/scripts_based_quantization_and_other_features/pytorch/foundation_model_post_training_quantization.md)，进行依赖安装大模型量化工具依赖安装
 

@@ -16,7 +16,7 @@ export OMP_NUM_THREADS=48
 ## 前期准备
 
 参考以下两篇文档完成工具使用前准备工作  
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../install_guide.md)  
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../getting_started/install_guide.md)  
 以及[大模型量化工具依赖安装](../feature_guide/scripts_based_quantization_and_other_features/pytorch/foundation_model_post_training_quantization.md)  。
 
 ## 代码示例

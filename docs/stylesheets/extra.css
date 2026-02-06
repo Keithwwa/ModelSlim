@@ -16,7 +16,25 @@
     margin-left: 1.5rem;
 }
 
-/* 自定义表格样式 */
+/* 全局表格样式优化 */
+.md-content table:not([class]) {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #dfe2e5;
+    display: table; /* 确保不被 md-typeset 的 overflow 破坏 */
+}
+
+.md-content table:not([class]) th, 
+.md-content table:not([class]) td {
+    border: 1px solid #dfe2e5;
+    padding: 8px 12px;
+}
+
+.md-content table:not([class]) tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+/* 兼容之前的 custom-table 类名 */
 .custom-table table {
     border-collapse: collapse;
     width: 100%;

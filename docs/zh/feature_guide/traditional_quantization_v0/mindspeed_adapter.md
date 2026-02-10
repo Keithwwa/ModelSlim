@@ -8,7 +8,7 @@
     - Atlas 训练系列产品。
     - Atlas A2 训练系列产品/Atlas 800I A2 推理产品/A200I A2 Box 异构组件。
 
-- 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../../getting_started/install_guide.md)。
+- 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 - 大模型量化工具须执行命令安装如下依赖。
   如下命令如果使用非root用户安装，需要在安装命令后加上--user，例如：pip3 install onnx --user。
 ```

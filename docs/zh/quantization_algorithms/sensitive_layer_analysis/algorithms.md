@@ -6,7 +6,7 @@ msModelSlim 提供了多种敏感层分析算法，主要基于激活值的统�
 
 ### 算法说明
 
-#### 1. std (Standard Deviation) - 标准差算法
+#### 1. std (Standard Deviation) - 标准差算法 {#1-std-standard-deviation---标准差算法}
 
 ##### 算法原理
 - 计算激活值的最大值（max_value）、最小值（min_value）和标准差（std）。
@@ -24,7 +24,7 @@ msModelSlim 提供了多种敏感层分析算法，主要基于激活值的统�
   - **标准差越大**：意味着数据分布较散，score 越小，通常表示该层对量化误差的容忍度较高（不敏感）。
   - **动态范围越大**：意味着数据跨度大，score 越大，表示该层在量化时更容易产生较大的截断或舍入误差（敏感）。
 
-#### 2. quantile (Quantile-based) - 分位数算法
+#### 2. quantile (Quantile-based) - 分位数算法 {#2-quantile-quantile-based---分位数算法}
 
 ##### 算法原理
 - 计算激活值的第 1/4 分位数（Q1）和第 3/4 分位数（Q3）。
@@ -41,7 +41,7 @@ msModelSlim 提供了多种敏感层分析算法，主要基于激活值的统�
   - **IQR 越大**：表示中间 50% 的数据分布越分散，score 越小，对量化越不敏感。
   - **max_abs 越大**：表示整体量程大，score 越大，对量化越敏感。
 
-#### 3. kurtosis (Kurtosis-based) - 峰度算法
+#### 3. kurtosis (Kurtosis-based) - 峰度算法 {#3-kurtosis-kurtosis-based---峰度算法}
 
 ##### 算法原理
 - 计算激活值的峰度（Kurtosis）。

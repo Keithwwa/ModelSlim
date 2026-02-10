@@ -121,7 +121,7 @@ y = torch.cat([linear(x) for linear in linears], dim=-1)
 
 **注意**：SmoothQuant 仅支持 `norm-linear` 子图类型，不支持其他子图类型（如 `ov`、`up-down`、`linear-linear`），因而不支持指定 `enable_subgraph_type` 字段。
 
-### YAML配置示例
+### YAML配置示例 {#yaml配置示例}
 
 ```yaml
 spec:
@@ -133,7 +133,7 @@ spec:
       exclude: ["*self_attn*"]             # 排除的层，支持通配符。
 ```
 
-### YAML配置字段详解
+### YAML配置字段详解 {#yaml配置字段详解}
 
 | 字段名 | 作用      | 说明 |
 |--------|---------|------|
@@ -144,7 +144,7 @@ spec:
 | exclude | 排除的层  | 字符串列表，支持通配符匹配，默认为空。|
 
 
-## 模型适配
+## 模型适配 {#模型适配}
 
 ### 接口与数据结构
 

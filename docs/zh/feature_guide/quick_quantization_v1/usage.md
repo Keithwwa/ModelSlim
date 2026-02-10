@@ -21,7 +21,7 @@ toc_depth: 3
   - [modelslim_v0 配置说明](#modelslim_v0-配置说明)
 - [附录](#附录)
 
-## 简介
+## 简介 {#简介}
 
 一键量化功能面向零基础用户，集成热门开源模型量化功能，具备“开箱即用”的特性。本功能支持全局调用量化命令，用户指定必要参数后，即可对目标原始权重执行指定的量化操作。
 
@@ -30,13 +30,13 @@ toc_depth: 3
 1. **方式1（推荐）**：适用于工具已经支持且用户无特殊量化诉求的主流模型量化场景，可通过指定 `quant_type` 参数，工具在最佳实践库中自动匹配最适合的[量化配置](#量化配置协议详解)进行量化。
 2. **方式2**：适用于模型或模型量化方式未收录最佳实践库或用户有特殊量化诉求场景，可通过指定 `config_path` 参数，工具直接使用用户指定的自定义[量化配置](#量化配置协议详解)进行量化。
 
-## 使用前准备
+## 使用前准备 {#使用前准备}
 
 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 
-## 快速开始
+## 快速开始 {#快速开始}
 
-### 命令格式
+### 命令格式 {#命令格式}
 
 一键量化功能通过命令行方式启动，可以通过如下命令运行：
 
@@ -55,7 +55,7 @@ msmodelslim quant [ARGS]
 |-----------------------|-----------|------|----------------|
 | MSMODELSLIM_LOG_LEVEL | 打印同级及以上日志 | 可选   | INFO(默认),DEBUG |
 
-### 参数说明
+### 参数说明 {#参数说明}
 
 | 参数名称              | 解释        | 是否可选              | 范围                                                                                   |
 |-------------------|-----------|-------------------|--------------------------------------------------------------------------------------|
@@ -68,7 +68,7 @@ msmodelslim quant [ARGS]
 | trust_remote_code | 是否信任自定义代码 | 可选                | 1. 类型：Bool，默认值：False <br>2. 请确保加载的自定义代码文件的安全性，设置为True有安全风险。                          |
 | h, help           | 命令行参数帮助信息 | 可选                |               -            |
 
-### 使用示例
+### 使用示例 {#使用示例}
 
 #### 示例1：使用量化类型参数（推荐方式）
 
@@ -118,9 +118,9 @@ msmodelslim quant \
 
 **注意**：在配置DP逐层量化之前，请首先确保配置的算法支持分布式执行，详见[逐层量化及分布式逐层量化](#逐层量化及分布式逐层量化)。
 
-## 高级特性
+## 高级特性 {#高级特性}
 
-### 逐层量化及分布式逐层量化
+### 逐层量化及分布式逐层量化 {#逐层量化及分布式逐层量化}
 
 #### 简介
 
@@ -214,9 +214,9 @@ msmodelslim quant --device npu:0,1,2,3 ...
 | MinMax | minmax | ✅ 支持 | 完全支持分布式执行 |
 | SSZ | ssz | ✅ 支持 | 完全支持分布式执行 |
 
-## 量化配置协议详解
+## 量化配置协议详解 {#量化配置协议详解}
 
-### 量化配置协议概述
+### 量化配置协议概述 {#量化配置协议概述}
 
 一键量化配置协议采用分层结构设计思想，通过YAML把整条量化流水线抽象成配置：使用的量化服务版本、流水线类型、量化处理方式、保存策略以及量化校准集等。开发者只关心“策略和流程”，无需在 Python 里硬编码这些细节。
 
@@ -249,7 +249,7 @@ spec:                         # 具体的量化服务配置字段
 | multimodal_vlm_modelslim_v1 | 逐步完善 | 推荐  |
 | multimodal_sd_modelslim_v1 | 逐步完善 | 推荐  |
 
-### modelslim_v1 配置详解
+### modelslim_v1 配置详解 {#modelslim_v1-配置详解}
 
 #### 功能说明
 
@@ -261,7 +261,7 @@ modelslim_v1是量化工具推出的新一代量化处理框架，目前正在�
 - 支持逐层量化，大幅降低资源消耗。
 - 不依赖特定版本的CANN。
 
-#### runner - 量化调度器类型
+#### runner - 量化调度器类型 {#runner---量化调度器类型}
 
 **作用**: 定义量化处理的调度器类型。
 **类型**: `string`。
@@ -274,7 +274,7 @@ modelslim_v1是量化工具推出的新一代量化处理框架，目前正在�
 | dp_layer_wise | 分布式逐层量化 | 大模型（≥32B）多卡场景 | 多设备并行，显著提升量化效率|
 | model_wise | 非逐层量化 | 小模型（<32B） | 内存占用较高，兼容性好 |
 
-#### process - 处理器配置字段
+#### process - 处理器配置字段 {#process---处理器配置字段}
 
 **作用**: 定义量化处理的处理器列表，按顺序执行每个处理器。
 
@@ -291,20 +291,20 @@ modelslim_v1是量化工具推出的新一代量化处理框架，目前正在�
 | 处理器 | 处理器类型 | 配置示例 | 配置字段详解 |
 | :--- | :--- | :--- | :--- |
 | SmoothQuant | 离群值抑制 | [SmoothQuant 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md#yaml配置示例) | [配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md#yaml配置字段详解) |
-| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置字段详解) |
-| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置字段详解) |
-| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置示例) | [ 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置字段详解) |
+| Iterative Smooth | 离群值抑制 | [Iterative Smooth 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置示例) | [配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#yaml配置字段详解) |
+| Flex Smooth Quant | 离群值抑制 | [Flex Smooth Quant 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置示例) | [配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#yaml配置字段详解) |
+| Flex AWQ SSZ | 离群值抑制 | [Flex AWQ SSZ 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置示例) | [配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md#yaml配置字段详解) |
 | KV Smooth | 离群值抑制 | [KV Smooth 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md#yaml配置示例) | [KV Smooth 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md#yaml配置字段详解) |
 | QuaRot | 离群值抑制 | [QuaRot 配置示例](../../quantization_algorithms/outlier_suppression_algorithms/quarot.md#yaml配置示例) | [QuaRot 配置字段详解](../../quantization_algorithms/outlier_suppression_algorithms/quarot.md#yaml配置字段详解) |
 | linear_quant | 量化 | [线性量化配置示例](../../quantization_algorithms/quantization_algorithms/linear_quant.md#yaml配置示例) | [线性量化配置字段详解](../../quantization_algorithms/quantization_algorithms/linear_quant.md#yaml配置字段详解) |
-| group | 量化 | [group 配置示例](group.md/#yaml配置示例) | [group 配置字段详解](group.md/#yaml配置字段详解) |
+| group | 量化 | [group 配置示例](group.md#yaml配置示例) | [group 配置字段详解](group.md#yaml配置字段详解) |
 | KVCache Quant | 量化 | [KVCache Quant 配置示例](../../quantization_algorithms/quantization_algorithms/kvcache_quant.md#yaml配置示例) | [KVCache Quant 配置字段详解](../../quantization_algorithms/quantization_algorithms/kvcache_quant.md#yaml配置字段详解) |
 | FA3 Quant | 量化 | [FA3 Quant 配置示例](../../quantization_algorithms/quantization_algorithms/fa3_quant.md#yaml配置示例) | [FA3 Quant 配置字段详解](../../quantization_algorithms/quantization_algorithms/fa3_quant.md#yaml配置字段详解) |
 | Float Sparse | 量化 | [Float Sparse 配置示例](../../quantization_algorithms/quantization_algorithms/float_sparse.md#yaml配置示例) | [Float Sparse 配置字段详解](../../quantization_algorithms/quantization_algorithms/float_sparse.md#yaml配置字段详解) |
 | AutoRound | 量化 | [AutoRound 配置示例](../../quantization_algorithms/quantization_algorithms/autoround.md#yaml配置示例) | [AutoRound 配置字段详解](../../quantization_algorithms/quantization_algorithms/autoround.md#yaml配置字段详解) |
 | LAOS (W4A4方案) | 综合方案 | [LAOS 配置示例](../../quantization_algorithms/quantization_algorithms/laos.md#yaml配置示例) | [LAOS 配置字段详解](../../quantization_algorithms/quantization_algorithms/laos.md#yaml配置字段详解) |
 
-#### save - 保存器配置字段
+#### save - 保存器配置字段 {#save---保存器配置字段-v1}
 
 **作用**: 定义量化结果的保存器列表。
 
@@ -421,7 +421,7 @@ spec:                          # 规格定义
       part_file_size: 4        # 权重分片大小：4GB（建议大模型开启）
 ```
 
-### multimodal_sd_modelslim_v1 配置详解
+### multimodal_sd_modelslim_v1 配置详解 {#multimodal_sd_modelslim_v1-配置详解}
 
 #### 功能说明
 
@@ -447,13 +447,13 @@ multimodal_sd_modelslim_v1是专门为多模态生成模型（如Wan2.1等）设
 
 #### runner - 量化调度器类型
 
-当前多模态生成模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式。runner默认无需配置，配置为非'layer_wise'值时，会警告提示并自动转换为layer_wise（逐层量化）形式。
+当前多模态生成模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式. runner默认无需配置，配置为非'layer_wise'值时，会警告提示并自动转换为layer_wise（逐层量化）形式。
 
 #### process - 处理器配置字段
 
 此配置字段与 modelslim_v1 保持一致，参考[modelslim_v1 配置详解/process - 处理器配置字段](#process---处理器配置字段)
 
-#### save - 保存器配置字段
+#### save - 保存器配置字段 {#save---保存器配置字段-sd}
 
 **作用**: 定义量化结果的保存器列表。
 
@@ -481,7 +481,7 @@ spec:
 
 **作用**: 多模态生成模型特有的配置参数，包含校准数据捕获和模型加载与推理配置。
 
-##### dump_config - 校准数据捕获配置
+##### dump_config - 校准数据捕获配置 {#dump_config---校准数据捕获配置}
 
 **作用**: 配置校准数据的捕获方式和存储路径。
 
@@ -542,9 +542,9 @@ spec:
 
 #### 使用示例
 
-- Wan2.1模型W8A8动态量化：[wan2_1_w8a8_dynamic.yaml](../../../../lab_practice/wan2_1/wan2_1_w8a8_dynamic.yaml)
+- Wan2.1模型W8A8动态量化：[wan2_1_w8a8_dynamic.yaml](https://gitcode.com/Ascend/msmodelslim/blob/master/msmodelslim/lab_practice/wan2_1/wan2_1_w8a8_dynamic.yaml)
 
-### multimodal_vlm_modelslim_v1 配置详解
+### multimodal_vlm_modelslim_v1 配置详解 {#multimodal_vlm_modelslim_v1-配置详解}
 
 #### 功能说明
 
@@ -570,22 +570,22 @@ multimodal_vlm_modelslim_v1是专门为多模态视觉语言模型（VLM）设�
 
 #### runner - 量化调度器类型
 
-当前多模态VLM模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式。runner默认无需配置，配置为非'layer_wise'字段时，会警告提示并自动转换为layer_wise（逐层量化）形式。
+当前多模态VLM模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式. runner默认无需配置，配置为非'layer_wise'字段时，会警告提示并自动转换为layer_wise（逐层量化）形式。
 
-#### process - 处理器配置字段
+#### process - 处理器配置字段 {#process---处理器配置字段-vlm}
 
 此配置字段与 modelslim_v1 保持一致，参考[modelslim_v1 配置详解/process - 处理器配置字段](#process---处理器配置字段)
 
-#### default_text - 默认文本prompt配置
+#### default_text - 默认文本prompt配置 {#default_text---默认文本prompt配置}
 
 **作用**: 统一指定所有校准图像的默认文本prompt。
 **类型**: `string`
 **默认值**: `"Describe this image in detail."`
 **限制**：不能使用空字符串作为文本prompt，当dataset字段配置为包含JSON/JSONL文件（用于描述每个图像的自定义文本prompt）的图像目录时，此字段失效。
 
-#### save - 保存器配置字段
+#### save - 保存器配置字段 {#save---保存器配置字段-vlm}
 
-此配置字段与 modelslim_v1 保持一致，参考[modelslim_v1 配置详解/save - 保存器配置字段](#save---保存器配置字段)
+此配置字段与 modelslim_v1 保持一致，参考[modelslim_v1 配置详解/save - 保存器配置字段](#save---保存器配置字段-v1)
 
 **推荐配置**:
 
@@ -651,9 +651,9 @@ spec:
 
 #### 使用示例
 
-- Qwen3-VL-MoE模型W8A8混合量化：[qwen3_vl_moe_w8a8.yaml](../../../../lab_practice/qwen3_vl_moe/qwen3_vl_moe_w8a8.yaml)
+- Qwen3-VL-MoE模型W8A8混合量化：[qwen3_vl_moe_w8a8.yaml](https://gitcode.com/Ascend/msmodelslim/blob/master/msmodelslim/lab_practice/qwen3_vl_moe/qwen3_vl_moe_w8a8.yaml)
 
-### modelslim_v0 配置说明
+### modelslim_v0 配置说明 {#modelslim_v0-配置说明}
 
 #### 功能说明
 
@@ -666,7 +666,7 @@ modelslim_v0量化服务主要由Calibrator、AntiOutlier等旧版接口组成�
 
 **注意**：modelslim_v0协议版本即将废弃，不推荐使用。建议使用modelslim_v1或更新的协议版本。
 
-## 附录
+## 附录 {#附录}
 
 ### 相关资料
 

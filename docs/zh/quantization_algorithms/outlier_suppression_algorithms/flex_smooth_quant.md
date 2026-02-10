@@ -7,7 +7,7 @@
 
 ## 使用前准备
 
-安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../getting_started/install_guide.md)。
+安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 
 ## 原理和实现
 
@@ -147,7 +147,7 @@ y = down_proj(ReLU(gate_proj(x)) * up_proj(x))
     - "*self_attn*"
 ```
 
-### YAML配置示例
+### YAML配置示例 {#yaml配置示例}
 
 ```yaml
 spec:
@@ -164,7 +164,7 @@ spec:
       exclude: ["*self_attn*"]            # 排除的层，支持通配符。
 ```
 
-### YAML配置字段详解
+### YAML配置字段详解 {#yaml配置字段详解}
 
 | 字段名 | 作用 | 说明 |
 |--------|------|------|
@@ -175,7 +175,7 @@ spec:
 | include | 包含的层 | 支持通配符匹配。 |
 | exclude | 排除的层 | 支持通配符匹配。 |
 
-## 模型适配
+## 模型适配 {#模型适配}
 
 ### 接口与数据结构
 

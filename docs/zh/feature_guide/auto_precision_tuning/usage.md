@@ -13,7 +13,7 @@ toc_depth: 3
 
 使用自动调优功能前，需要完成以下工具的安装：
 
-1. **vLLM-Ascend**：用于量化后模型拉起服务化。自动调优功能在评估量化后模型精度时，需要使用 vLLM-Ascend 将量化后的模型以服务化方式启动。建议直接使用官方提供的镜像进行安装，详细安装说明请参考 [vLLM-Ascend 安装文档](https://docs.vllm.ai/projects/vllm-ascend-cn/zh-cn/latest/installation.html)。
+1. **vLLM-Ascend**：用于量化后模型拉起服务化。自动调优功能在评估量化后模型精度时，需要使用 vLLM-Ascend 将量化后的模型以服务化方式启动。建议直接使用官方提供的镜像进行安装，详细安装说明请参考 [vLLM-Ascend 安装文档](https://docs.vllm.ai/projects/vllm-ascend-cn/zh-cn/latest/installation/installation_ascend.html)。
 2. **AISbench**：用于量化后模型测试。自动调优功能使用 [AISbench](https://gitee.com/aisbench/benchmark) 对量化后的模型进行精度评估和测试。**支持版本：**`AISBench-3.0-benchmark-20250930-master`。完成安装后，还需要参考 AISbench 指南准备对应的数据集。
 
 请确保上述工具已正确安装并配置，否则自动调优功能将无法正常进行模型评估。
@@ -67,9 +67,9 @@ msmodelslim tune --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --config ${
 |-------------------|-----------|-------------------|--------------------------------------------------------------------------------------|
 | model_path        | 模型路径      | 必选                | 类型：Str                                                                               |
 | save_path         | 调优结果保存路径  | 必选                | 类型：Str                                                                               |
-| config            | 调优配置文件路径  | 必选                | 1. 类型：Str <br>2. 配置文件路径，必须为完整的文件路径 <br>3. 配置文件格式为yaml，用户需要自定义配置文件，可以参考 `msmodelslim/docs/功能指南/自动调优/example` 目录下的配置文件格式进行自定义 |
+| config            | 调优配置文件路径  | 必选                | 1. 类型：Str <br>2. 配置文件路径，必须为完整的文件路径 <br>3. 配置文件格式为yaml，用户需要自定义配置文件，可以参考 `msmodelslim/lab_practice/auto_tuning` 目录下的配置文件格式进行自定义 |
 | device            | 量化设备      | 可选                | 1. 类型：Str <br>2. 参考值：'npu','npu:0,1,2,3','cpu' <br>3. 默认值为"npu"（单设备）<br>4. 指定多个设备时（如：'npu:0,1,2,3'），系统启动DP逐层量化，请确定配置的算法是否支持分布式执行 |
-| model_type        | 模型名称      | 可选                | 1. 类型：Str <br>2. 默认值为"default" <br>3. 大小写敏感，请参考[大模型支持矩阵](../../foundation_model_support_matrix.md) |
+| model_type        | 模型名称      | 可选                | 1. 类型：Str <br>2. 默认值为"default" <br>3. 大小写敏感，请参考[大模型支持矩阵](../../model_support/foundation_model_support_matrix.md) |
 | timeout           | 调优超时时间    | 可选                | 1. 类型：Str <br>2. 格式：`<天数>D`、`<小时数>H` 或 `<天数>D<小时数>H` <br>3. 示例：'1D'、'2H'、'3D4H' <br>4. 默认值：None（无超时限制） |
 | trust_remote_code | 是否信任自定义代码 | 可选                | 1. 类型：Bool，默认值：False <br>2. 请确保加载的自定义代码文件的安全性，设置为True有安全风险。                          |
 | h, help           | 命令行参数帮助信息 | 可选                |               -            |
@@ -78,7 +78,7 @@ msmodelslim tune --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --config ${
 
 1. **模型支持**：使用自动调优功能前，请确保模型在支持列表中。可以通过查看 `msmodelslim/config/config.ini` 中的 `ModelAdapter` 确定模型是否支持。如果模型不支持，需要先进行模型适配。
 
-2. **自定义配置文件**：用户需要自定义调优配置文件，配置文件格式为yaml。用户可以参考 `docs/zh/feature_guide/auto_tuning/example` 目录下的配置文件格式进行自定义。配置文件的详细说明请参考[自动调优配置协议说明](configuration_protocols.md)。精度目标设置与不同模型的服务化参数配置都需要在配置文件中进行修改。
+2. **自定义配置文件**：用户需要自定义调优配置文件，配置文件格式为yaml。用户可以参考 `msmodelslim/lab_practice/auto_tuning` 目录下的配置文件格式进行自定义。配置文件的详细说明请参考[自动调优配置协议说明](configuration_protocols.md)。精度目标设置与不同模型的服务化参数配置都需要在配置文件中进行修改。
 
 3. 如果需要打印调优运行日志，可通过以下环境变量进行设置。
 
@@ -162,6 +162,6 @@ msmodelslim tune --model_path ${MODEL_PATH} --save_path ${SAVE_PATH} --config ${
 
 ## 相关资料
 
-- **配置协议**：调优配置文件的详细说明，可以参考[自动调优配置协议说明](configuration_protocols.md)。完整的配置文件示例，可以参考[example](./example/)目录下的配置文件。
-- **调优算法**：对于自动调优支持的多种策略和算法，可以参考[算法说明](../../algorithms_instruction/)目录下的相关文档。当前支持的调优算法包括：
-  - [Standing High 调优算法](../../algorithms_instruction/standing_high.md)：基于量化回退层选择和离群值抑制策略的自动调优算法
+- **配置协议**：调优配置文件的详细说明，可以参考[自动调优配置协议说明](configuration_protocols.md)。完整的配置文件示例，可以参考 [`msmodelslim/lab_practice/auto_tuning`](https://gitcode.com/Ascend/msmodelslim/tree/master/msmodelslim/lab_practice/auto_tuning) 目录下的配置文件。
+- **调优算法**：对于自动调优支持的多种策略和算法，可以参考相关文档：
+- [Standing High 调优算法](../../quantization_algorithms/auto_tuning_strategies/standing_high.md)：基于量化回退层选择和离群值抑制策略的自动调优算法

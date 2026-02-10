@@ -35,7 +35,7 @@
 
 以下时序图展示了QuaRot算法的完整处理流程，包括Runner、QuaRotProcessor、ModelAdapter和LAOSOnlineRotationProcessor之间的交互：
 
-![QuaRot处理流程时序图](figures/quarot_processing_sequence_diagram.png)
+![QuaRot处理流程时序图](../figures/quarot_processing_sequence_diagram.png)
 
 #### 1) pre_run阶段
 
@@ -103,7 +103,7 @@ post_run阶段在Runner结束调度后执行，主要完成以下操作：
 - 清理状态，清空所有保存的映射和命令列表。
 - 如果启用了在线旋转，调用`online_processor.post_run()`，将HookIR转换为WrapperIR。
 
-## 适用要求
+## 适用要求 {#适用范围与局限性}
 
 - **模型结构限制**：当前的适配器已支持Qwen3 Dense模型系列、Qwen3 MOE模型系列、DeepSeek-V3/R1系列。
 - **张量并行限制**：若在配置中启用了在线旋转，在使用推理引擎以TP并行的方式进行部署时，需要保证`tp_size`为2的幂，并且`tp_size`需要小于等于QuaRot的配置参数`max_tp_size`，否则必然导致精度异常。
@@ -175,7 +175,7 @@ spec:
 
 
 
-## 模型适配
+## 模型适配 {#模型适配}
 
 ### 接口与数据结构
 

@@ -41,6 +41,6 @@
 ---
 
 ## 快速链接
-- [安装指南](../../../getting_started/install_guide.md)
-- [已验证模型列表](../../../foundation_model_support_matrix.md)
-- [API 接口文档](../../../python_api/common_apis.md)
+- [安装指南](../../getting_started/install_guide.md)
+- [已验证模型列表](../../model_support/foundation_model_support_matrix.md)
+- [API 接口文档](../../python_api_v0/common_apis.md)

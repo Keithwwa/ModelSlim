@@ -10,7 +10,7 @@
     - Atlas 训练系列产品。
     - Atlas A2 训练系列产品/Atlas 800I A2 推理产品/A200I A2 Box 异构组件。
 
-- 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../../getting_started/install_guide.md)。
+- 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 - 安装必要依赖：
     ```bash
     pip3 install numpy==1.25.2
@@ -31,7 +31,7 @@ export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3 #配置量化将会执行的设备序�
 大模型压缩技术主要针对常规大语言模型进行量化压缩。
 
 ### 功能实现流程
-![量化接口调用流程](../figures/[pytorch]quantization_api_calling.png)
+![量化接口调用流程](./figures/[pytorch]quantization_api_calling.png)
 
 关键步骤说明如下：
 1. **用户准备**：准备原始模型和校准数据。

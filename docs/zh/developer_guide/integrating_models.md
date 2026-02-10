@@ -12,7 +12,7 @@ msModelSlim认识到量化机制和算法都有适用范围和局限性，而新
 
 * 接口在量化机制和算法等组件中定义，描述了对应组件对模型的诉求，接口定义和使用请参考对应组件的文档和代码
 * 仅当使用到对应组件时才需要实现对应接口
-* 接口汇总：[`msmodelslim/model/interface_hub.py`](../../../msmodelslim/model/interface_hub.py)
+* 接口汇总：[`msmodelslim/model/interface_hub.py`](https://gitcode.com/Ascend/msmodelslim/blob/master/msmodelslim/model/interface_hub.py)
 
 ### 模型适配器
 
@@ -22,15 +22,15 @@ msModelSlim认识到量化机制和算法都有适用范围和局限性，而新
 
 ## 模型接入
 
-以下内容将以 [`Qwen3-32B`](../../../msmodelslim/model/qwen3/model_adapter.py) W8A8动态量化场景（简称“场景示例”）的模型接入为例：
+以下内容将以 [`Qwen3-32B`](https://gitcode.com/Ascend/msmodelslim/blob/master/msmodelslim/model/qwen3/model_adapter.py) W8A8动态量化场景（简称“场景示例”）的模型接入为例：
 
 ###  1. 新建模型适配器`py`文件
 
-建议放在[`msmodelslim/model/`](../../../msmodelslim/model/) 下，命名如 `qwen3.py`。
+建议放在[`msmodelslim/model/`](https://gitcode.com/Ascend/msmodelslim/tree/master/msmodelslim/model) 下，命名如 `qwen3.py`。
 
 ### 2. 理清量化过程涉及的组件，以组件接口组合定义适配器类
 
-模型适配器类必须继承自[`BaseModelAdapter`](../../../msmodelslim/model/base.py)。
+模型适配器类必须继承自[`BaseModelAdapter`](https://gitcode.com/Ascend/msmodelslim/blob/master/msmodelslim/model/base.py)。
    
 根据经验，W8A8动态量化的精度损失很小，无需搭配离群值抑制算法，也很少需要回退；因此，在场景示例中，我们仅需支持量化调度，无需支持离群值量化、敏感层分析等额外功能。需要接入其他算法可以参考[附录-可用算法接口适配指导](#可用算法接口适配指导)
 
@@ -89,7 +89,7 @@ class Qwen3ModelAdapter(TransformersModel,
 
 ### 4. 注册模型
 
-名在配置文件[`config.ini`](../../../config/config.ini)中注册模型名称，便于同一系列的模型复用一个模型适配器。
+名在配置文件[`config.ini`](https://gitcode.com/Ascend/msmodelslim/blob/master/config/config.ini)中注册模型名称，便于同一系列的模型复用一个模型适配器。
 
 ```ini
 # 在ModelAdapter中的qwen3系列注册Qwen3-32B模型，qwen3对应下面的Qwen3ModelAdapter模型适配器
@@ -161,17 +161,17 @@ msmodelslim quant --model_path ${MODEL_PATH} \
                   --trust_remote_code False
 ```
 
-- 详细用法与参数说明请参阅：[`一键量化使用说明`](../feature_guide/quick_quantization/usage.md)
+- 详细用法与参数说明请参阅：[`一键量化使用说明`](../feature_guide/quick_quantization_v1/usage.md)
 
 ## 附录
 
-### 可用算法接口适配指导
+### 可用算法接口适配指导 {#可用算法接口适配指导}
 
 | 算法               | 算法介绍       | 适配指导       |
 | ------------------ | ------------- | ------------- |
-| SmoothQuant | [SmoothQuant：离群值抑制算法说明](../algorithms_instruction/smooth_quant.md#smooth-quant离群值抑制算法说明) | [SmoothQuant 适配](../algorithms_instruction/smooth_quant.md#模型适配)
-| Iterative Smooth | [Iterative Smooth：离群值抑制算法说明](../algorithms_instruction/iterative_smooth.md#iterative-smooth离群值抑制算法说明) | [Iterative Smooth 适配](../algorithms_instruction/iterative_smooth.md#模型适配)
-| Flex Smooth Quant| [Flex Smooth Quant：灵活平滑量化算法说明](../algorithms_instruction/flex_smooth_quant.md#flex-smooth-quant灵活平滑量化算法说明)| [Flex Smooth Quant 适配](../algorithms_instruction/flex_smooth_quant.md#模型适配)
-| KV Smooth | [KVSmooth：KVCache量化离群值抑制算法说明](../algorithms_instruction/kv_smooth.md#kvsmoothkvcache量化离群值抑制算法说明) | [KV Smooth 适配](../algorithms_instruction/kv_smooth.md#模型适配)
-| QuaRot | [QuaRot：基于旋转的离群值抑制算法说明](../algorithms_instruction/quarot.md#quarot基于旋转的离群值抑制算法说明) | [QuaRot 适配](../algorithms_instruction/quarot.md#模型适配)
-| FA3 | [FA3量化：Flash Attention 3激活量化算法说明](../algorithms_instruction/fa3_quant.md#fa3量化flash-attention-3激活量化算法说明) | [FA3 适配](../algorithms_instruction/fa3_quant.md#模型适配)
+| SmoothQuant | [SmoothQuant：离群值抑制算法说明](../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md) | [SmoothQuant 适配](../quantization_algorithms/outlier_suppression_algorithms/smooth_quant.md#模型适配)
+| Iterative Smooth | [Iterative Smooth：离群值抑制算法说明](../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md) | [Iterative Smooth 适配](../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md#模型适配)
+| Flex Smooth Quant| [Flex Smooth Quant：灵活平滑量化算法说明](../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md)| [Flex Smooth Quant 适配](../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md#模型适配)
+| KV Smooth | [KVSmooth：KVCache量化离群值抑制算法说明](../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md) | [KV Smooth 适配](../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md#模型适配)
+| QuaRot | [QuaRot：基于旋转的离群值抑制算法说明](../quantization_algorithms/outlier_suppression_algorithms/quarot.md) | [QuaRot 适配](../quantization_algorithms/outlier_suppression_algorithms/quarot.md#模型适配)
+| FA3 | [FA3量化：Flash Attention 3激活量化算法说明](../quantization_algorithms/quantization_algorithms/fa3_quant.md) | [FA3 适配](../quantization_algorithms/quantization_algorithms/fa3_quant.md#模型适配)

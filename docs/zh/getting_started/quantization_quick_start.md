@@ -2,10 +2,10 @@
 
 ## 概述
 
-msModelSlim 提供了两种量化方式：**一键量化**和**传统量化**。
+msModelSlim 提供了两种量化方式：**一键量化（V1）**和**传统量化（V0）**。
 
-- **一键量化**：面向零基础用户，通过命令行方式快速完成量化，具备“开箱即用”的特性。系统会自动匹配最佳实践配置，用户只需指定必要参数即可；此外也支持自定义精细化混合量化策略，灵活性高。
-- **传统量化**：通过 Python 脚本方式执行量化，在泛化性、可读性等方面均低于一键量化，已停止演进，通常用于一键量化尚未支持的模型。
+- **一键量化（V1）**：面向零基础用户，通过命令行方式快速完成量化，具备“开箱即用”的特性。系统会自动匹配最佳实践配置，用户只需指定必要参数即可；此外也支持自定义精细化混合量化策略，灵活性高。
+- **传统量化（V0）**：通过 Python 脚本方式执行量化，在泛化性、可读性等方面均低于一键量化，已停止演进，通常用于一键量化尚未支持的模型。
 
 下面将以 Qwen2.5-7B-Instruct 为例进行介绍。
 
@@ -57,8 +57,8 @@ msmodelslim quant [ARGS]
 | `model_path` | 模型路径 | 必选 | 原始浮点模型权重路径 |
 | `save_path` | 量化权重保存路径 | 必选 | 量化后权重的保存目录 |
 | `device` | 量化设备 | 可选 | 默认值为 `"npu"`（单设备）。支持值：`'npu'`、`'npu:0,1,2,3'`（多设备）、`'cpu'`。指定多个设备时，系统启动 DP 逐层量化 |
-| `model_type` | 模型名称 | 必选 | 大小写敏感，请参考[大模型支持矩阵](foundation_model_support_matrix.md) |
-| `quant_type` | 量化类型 | 与 `config_path` 二选一 | 支持值：`w4a8`、`w4a8c8`、`w8a8`、`w8a8s`、`w8a8c8`、`w16a16s`。请参考[大模型支持矩阵](foundation_model_support_matrix.md) |
+| `model_type` | 模型名称 | 必选 | 大小写敏感，请参考[大模型支持矩阵](../model_support/foundation_model_support_matrix.md) |
+| `quant_type` | 量化类型 | 与 `config_path` 二选一 | 支持值：`w4a8`、`w4a8c8`、`w8a8`、`w8a8s`、`w8a8c8`、`w16a16s`。请参考[大模型支持矩阵](../model_support/foundation_model_support_matrix.md) |
 | `config_path` | 指定配置路径 | 与 `quant_type` 二选一 | 配置文件格式为 yaml，当前只支持最佳实践库中已验证的配置 |
 | `trust_remote_code` | 是否信任自定义代码 | 可选 | 默认值：`False`。设置为 `True` 时可能执行浮点模型权重中代码文件，请确保浮点模型来源安全可靠 |
 
@@ -246,19 +246,19 @@ for output in outputs:
 
 ### 支持的模型和量化类型
 
-可通过[大模型支持矩阵](foundation_model_support_matrix.md)查看不同模型的支持情况：
+可通过[大模型支持矩阵](../model_support/foundation_model_support_matrix.md)查看不同模型的支持情况：
 - 标记了`一键量化`的模型支持一键量化方式
 - 所有在 `example/` 目录下有量化脚本的模型都支持传统量化方式
 
 ### 大模型量化建议
 
 对于过大的模型（7B 及以上），如果遇到显存不足的问题，可以尝试：
-1. **使用逐层量化**：在一键量化中默认生效[逐层量化](./feature_guide/quick_quantization/layer_wise_quantization.md)，传统量化中不支持
+1. **使用逐层量化**：在一键量化中默认生效[逐层量化](../feature_guide/quick_quantization_v1/usage.md#逐层量化及分布式逐层量化)，传统量化中不支持
 2. **使用 CPU 量化**：设置 `--device cpu`（一键量化）或 `--device_type cpu`（传统量化），速度较慢但显存占用低
 
 ### 支持的量化算法
 
-对于一键量化支持的多种算法，可以参考[一键量化 V1 架构支持的算法](./algorithms_instruction)。
+对于一键量化支持的多种算法，可以参考[一键量化 V1 架构支持的算法](../quantization_algorithms/README.md)。
 
 ### 常见问题
 
@@ -273,7 +273,7 @@ A: 可以尝试以下方法：
 A: 可以尝试：
 1. 使用更高精度的量化类型（如从 w4a8 改为 w8a8）
 2. 参考 `msmodelslim/lab_practice`路径下模型对应的最佳实践配置
-3. 检查离群值抑制算法、量化策略、校准数据集等是否合适，参考[量化精度调优指南](.\case_studies\quantization_precision_tuning_guide.md)
+3. 检查离群值抑制算法、量化策略、校准数据集等是否合适，参考[量化精度调优指南](../case_studies/quantization_precision_tuning_guide.md)
 
 **Q: 如何验证量化效果？**
 

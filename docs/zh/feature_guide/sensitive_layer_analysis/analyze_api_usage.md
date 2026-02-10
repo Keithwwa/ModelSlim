@@ -59,7 +59,7 @@ msmodelslim analyze [参数选项]
 
 ### 参数详细说明
 
-#### model_type 支持列表
+#### model_type 支持列表 {#model_type-支持列表}
 | model_type                   |
 |------------------------------|
 | Qwen2.5-7B-Instruct          | 
@@ -231,7 +231,7 @@ Load model Qwen2.5-7B-Instruct from /path/Qwen2.5-7B-Instruct to npu success.
 - 系统会打印warning日志，提示使用默认模型。
 - 自动使用默认模型进行处理。
 - 可能无法获得最佳的分析效果。
-- **建议**：优先使用[model_type 支持列表](#model_type-%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8)中的标准model_type，以获得最佳兼容性和分析精度。
+- **建议**：优先使用[model_type 支持列表](#model_type-支持列表)中的标准model_type，以获得最佳兼容性和分析精度。
 
 ### 问题现象：分析结果如何应用到量化配置中？
 **解决方案**：

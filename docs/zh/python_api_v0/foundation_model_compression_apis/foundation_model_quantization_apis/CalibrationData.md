@@ -58,4 +58,4 @@ CalibrationData.process()
 ```
 
 ## 调用说明
-请参考 [混合校准数据集使用方法说明](../../../feature_guide/scripts_based_quantization_and_other_features/pytorch/mixed_calibration_dataset.md)
+请参考 [混合校准数据集使用方法说明](../../../feature_guide/traditional_quantization_v0/foundation_model_quantization.md#5-混合校准数据集准备)

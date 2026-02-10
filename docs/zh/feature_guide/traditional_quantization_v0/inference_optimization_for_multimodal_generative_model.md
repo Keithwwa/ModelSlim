@@ -13,7 +13,7 @@
 - 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 - 参考开源模型仓库[OpenSoraPlanV1.2](https://github.com/PKU-YuanGroup/Open-Sora-Plan/releases/tag/v1.2.0) 的readme，下载模型权重，完成模型所需的python环境依赖的安装。
 
-### 环境配置
+### 环境配置 {#环境要求}
 ```bash
 # Install torch_npu and decord
 pip install torch_npu==2.1.0.post6
@@ -63,7 +63,6 @@ DiT模型在推理过程中需要多次计算transformer block的输出。传统
 4. 选择能在减少计算量的同时保持生成质量的最优缓存配置。
 
 ```mermaid
-%%{init: {'theme': 'forest'}}%%
 sequenceDiagram
     participant U as 用户
     participant S as 搜索系统
@@ -84,7 +83,6 @@ sequenceDiagram
 ### 使用流程概览
 
 ```mermaid
-%%{init: {'theme': 'forest'}}%%
 graph TD
     A[1.准备环境和模型] --> B[2.定义pipeline运行函数]
     B --> C[3.配置和初始化缓存适配器]
@@ -93,7 +91,7 @@ graph TD
 ```
 
 ### 详细使用步骤
-详细使用接口说明请参考 [DitCache接口文档](../../../python_api/multimodal_inference_apis/DitCache) 和 [DitCacheAdaptor](../../../python_api/multimodal_inference_apis/DitCache/DitCacheAdaptor.md)。
+详细使用接口说明请参考 [DitCache 接口文档](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheAdaptor.md) 和 [DitCacheAdaptor](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheAdaptor.md)。
 
 #### 1. 准备环境和模型
 
@@ -165,7 +163,7 @@ searched_config = cache_adaptor.search(
 )
 ```
 
-完整的搜索脚本示例 [dit_cache_search_t2v_sp.sh](../../../../../example/osp1_2/dit_cache_search_t2v_sp.sh)：
+完整的搜索脚本示例 [dit_cache_search_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/dit_cache_search_t2v_sp.sh)：
 ```bash
 #!/bin/bash
 torchrun --nnodes=1 --nproc_per_node 8 --master_port 29503 \
@@ -242,7 +240,7 @@ for step_id, t in enumerate(timesteps):
 }
 ```
 ##### 5.3 完整推理脚本
-完整的推理脚本示例 [dit_cache_sample_t2v_sp.sh](../../../../../example/osp1_2/dit_cache_sample_t2v_sp.sh)：
+完整的推理脚本示例 [dit_cache_sample_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/dit_cache_sample_t2v_sp.sh)：
 ```bash
 #!/bin/bash
 torchrun --nnodes=1 --nproc_per_node 8 --master_port 29503 \
@@ -293,7 +291,7 @@ torchrun --nnodes=1 --nproc_per_node 8 --master_port 29503 \
 4. 选择能在减少计算量的同时保持生成质量的最优采样步骤。
 
 ### 使用步骤
-详细使用接口说明请参考 [ReStepAdaptor.md](../../../python_api/multimodal_inference_apis/sampling_optimization_apis/ReStepAdaptor.md) 和 [ReStepSearchConfig.md](../../../python_api/multimodal_inference_apis/sampling_optimization_apis/ReStepSearchConfig.md)
+详细使用接口说明请参考 [ReStepAdaptor.md](../../python_api_v0/multimodal_inference_apis/sampling_optimization_apis/ReStepAdaptor.md) 和 [ReStepSearchConfig.md](../../python_api_v0/multimodal_inference_apis/sampling_optimization_apis/ReStepSearchConfig.md)
 #### 1. 运行原始模型推理，生成baseline视频搜索校准
 ```bash
 cd <Open-Sora-Plan-1.2.0>
@@ -302,7 +300,7 @@ bash scripts/text_condition/gpu/sample_t2v_sp.sh
 ```
 
 #### 2. 搜索 timestep
-获取到模型pipeline对象后，设置采样优化参数，传入生成的校准视频文件夹目录，调用`ReStepAdaptor`类进行 `timestep` 搜索，完整示例脚本： [search_t2v_sp.sh](../../../../../example/osp1_2/search_t2v_sp.sh)。
+获取到模型pipeline对象后，设置采样优化参数，传入生成的校准视频文件夹目录，调用`ReStepAdaptor`类进行 `timestep` 搜索，完整示例脚本： [search_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/search_t2v_sp.sh)。
 ```python3
 # Load pipeline, for example
 pipeline: OpenSoraPipeline = load_t2v_checkpoint(model_path)
@@ -328,7 +326,7 @@ scheduler_timestep = restep_adaptor.search()
 #### 3. 用搜索的 timestep 进行推理
 
 
-示例推理命令（完整脚本请参考[sample_t2v_sp.sh](../../../../../example/osp1_2/sample_t2v_sp.sh)）： 
+示例推理命令（完整脚本请参考[sample_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/sample_t2v_sp.sh)）： 
 ```shell
 torchrun --nnodes=1 --nproc_per_node 8  --master_port 29503 \
     -m msmodelslim.pytorch.multi_modal.examples.osp1_2.sample_t2v_sp \
@@ -343,4 +341,4 @@ torchrun --nnodes=1 --nproc_per_node 8  --master_port 29503 \
     --schedule_timestep "/path/of/schedule/timestep/file.txt"
 ```
 其中，`--schedule_timestep` 为搜索得到的 timestep 文件路径。
-可参考[search_t2v_sp.sh](../../../../../example/osp1_2/search_t2v_sp.sh)修改模型参数路径和搜索得到的 timestep 文件路径，执行带采样优化的推理生成。
+可参考[search_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/search_t2v_sp.sh)修改模型参数路径和搜索得到的 timestep 文件路径，执行带采样优化的推理生成。

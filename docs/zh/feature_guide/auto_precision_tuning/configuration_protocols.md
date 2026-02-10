@@ -21,7 +21,7 @@
 strategy:
   type: <strategy_type>  # 调优策略类型，如 standing_high
   # 策略特有配置，不同策略类型有不同的配置字段
-  # 详细配置请参考对应算法的文档，如 [Standing High 调优算法](../../algorithms_instruction/standing_high.md)
+  # 详细配置请参考对应算法的文档，如 [Standing High 调优算法](../../quantization_algorithms/auto_tuning_strategies/standing_high.md)
   template:
     # 量化基础配置，参考一键量化配置协议
   metadata:
@@ -60,17 +60,17 @@ evaluation:
 
 **类型**: `string`
 
-**可选值**: 根据已实现的调优策略而定，例如 `standing_high`。详细的算法说明请参考[算法说明](../../algorithms_instruction/)目录下的相关文档，如 [Standing High 调优算法](../../algorithms_instruction/standing_high.md)。
+**可选值**: 根据已实现的调优策略而定，例如 `standing_high`。详细的算法说明请参考 [Standing High 调优算法](../../quantization_algorithms/auto_tuning_strategies/standing_high.md)。
 
 #### 策略特有配置字段
 
-不同的调优策略类型可能有不同的特有配置字段。例如，`standing_high` 策略包含 `anti_outlier_strategies` 字段用于配置离群值抑制策略。详细的策略特有配置说明请参考对应算法的文档，如 [Standing High 调优算法](../../algorithms_instruction/standing_high.md)。
+不同的调优策略类型可能有不同的特有配置字段。例如，`standing_high` 策略包含 `anti_outlier_strategies` 字段用于配置离群值抑制策略。详细的策略特有配置说明请参考对应算法的文档，如 [Standing High 调优算法](../../quantization_algorithms/auto_tuning_strategies/standing_high.md)。
 
 #### template - 量化基础配置
 
 **作用**: 定义量化处理的基础配置，包括量化调度器、处理器、保存器和数据集配置。该配置是开启调优的起点，基础配置的选择一定程度上会影响调优的迭代次数。
 
-**配置协议**: template 字段的配置协议与一键量化配置协议中的 `spec` 字段保持一致，详细配置说明请参考[一键量化配置协议说明](../quick_quantization/configuration_protocols.md)。
+**配置协议**: template 字段的配置协议与一键量化配置协议中的 `spec` 字段保持一致，详细配置说明请参考[一键量化配置协议说明](../quick_quantization_v1/usage.md#量化配置协议详解)。
 
 **核心字段**:
 

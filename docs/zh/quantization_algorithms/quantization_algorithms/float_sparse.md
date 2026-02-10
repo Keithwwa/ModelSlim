@@ -135,7 +135,7 @@ spec:
 
 
 ## 模型适配
-请参考[自主量化/模型接入](../custom_quantization/integrating_models.md)完成模型接入，在 YAML 文件中完成对应配置即可实现浮点稀疏的适配。
+请参考[开发者指南/模型接入](../../developer_guide/integrating_models.md)完成模型接入，在 YAML 文件中完成对应配置即可实现浮点稀疏的适配。
 
 
 ## 算法参数

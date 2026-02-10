@@ -78,11 +78,11 @@ AutoRound 在此基础之上引入了可学习的舍入偏移 V 和可选的缩�
 - **使用限制**：
   - 适用于llm中的线性层量化。
   - 需要足够的校准数据或训练迭代次数来优化参数。
-  - **低比特量化极度依赖于良好的离群值抑制算法，建议用户配合[QuaRot](quarot.md)或[Iterative Smooth](iterative_smooth.md)等离群值抑制方法一起使用，不建议用户（尤其是缺乏量化调优经验的基础用户）单独使用AutoRound，否则可能导致模型精度严重下降、对话输出异常或其他不可预期的行为，相关风险由用户自行承担。**
+  - **低比特量化极度依赖于良好的离群值抑制算法，建议用户配合[QuaRot](../outlier_suppression_algorithms/quarot.md)或[Iterative Smooth](../outlier_suppression_algorithms/iterative_smooth.md)等离群值抑制方法一起使用，不建议用户（尤其是缺乏量化调优经验的基础用户）单独使用AutoRound，否则可能导致模型精度严重下降、对话输出异常或其他不可预期的行为，相关风险由用户自行承担。**
 
 ## 功能介绍
 
-### 昇腾AI处理器支持情况
+### 昇腾AI处理器支持情况 {#硬件产品支持}
 
 | 产品系列 | 支持 |
 |---------|------|
@@ -163,7 +163,7 @@ spec:
 | enable_round_tuning | 是否启用舍入调优 | `bool` | 是否启用舍入调优，True表示启用，False表示不启用 | `True` |
 | strategies | 量化策略配置 | `array[object]` | 用于指定量化策略，支持int4和int8混合量化策略 | [见下方详细配置](#strategies-量化策略配置) |
 
-#### strategies (量化策略配置)
+#### strategies (量化策略配置) {#strategies-量化策略配置}
 
 **作用**: 配置不同层的量化策略，支持混合量化。
 
@@ -173,7 +173,7 @@ spec:
 | include | 包含的层 | `array[string]` | 支持通配符匹配，指定要量化的层 | `["*"]`, `["*self_attn*"]` |
 | exclude | 排除的层 | `array[string]` | 支持通配符匹配，优先级高于include | `["*down_proj*"]` |
 
-#### qconfig.act (激活值量化配置)
+#### qconfig.act (激活值量化配置) {#qconfigact-激活值量化配置}
 
 **作用**: 配置激活值的量化参数。
 
@@ -184,7 +184,7 @@ spec:
 | symmetric | 是否对称量化 | `True` | 对称量化，零点为0，AutoRound激活值量化仅支持对称量化 | `True` |
 | method | 量化方法 | `"minmax"` | 激活值量化方法：MinMax算法 | `"minmax"` |
 
-#### qconfig.weight (权重量化配置)
+#### qconfig.weight (权重量化配置) {#qconfigweight-权重量化配置}
 
 **作用**: 配置权重的量化参数。
 
@@ -196,7 +196,7 @@ spec:
 | method | 量化方法 | `"autoround"` | 权重量化方法：AutoRound算法，即包含参数训练的权重量化 | `"autoround"` |
 | ext | 扩展配置 | `object` | 包含AutoRound特有的配置参数 | [见下方详细配置](#ext-autoround扩展配置) |
 
-#### ext (AutoRound扩展配置)
+#### ext (AutoRound扩展配置) {#ext-autoround扩展配置}
 
 **作用**: 配置AutoRound算法特有的参数。
 
@@ -281,4 +281,4 @@ class AutoroundQuantProcessor(AutoSessionProcessor):
 
 ### 4. 层匹配告警
 
-层匹配告警的处理机制与LinearQuantProcess相同。当`include/exclude`模式未匹配到任何层时，工具会进行告警。详细的常见匹配失败原因和排查步骤请参考 [LinearQuantProcess层匹配告警](../feature_guide/quick_quantization/linear_quant.md#层匹配告警)。
+层匹配告警的处理机制与LinearQuantProcess相同。当`include/exclude`模式未匹配到任何层时，工具会进行告警。详细的常见匹配失败原因和排查步骤请参考 [LinearQuantProcess层匹配告警](linear_quant.md#层匹配告警)。

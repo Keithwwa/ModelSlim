@@ -56,7 +56,7 @@ nav:
     - 自动调优策略:
       - 使用指南: "zh/feature_guide/auto_precision_tuning/usage.md"
       - 配置协议详解: "zh/feature_guide/auto_precision_tuning/configuration_protocols.md"
-    - V0框架与传统模型:
+    - V0框架与传统模型（已停止演进）:
       - 概览: "zh/feature_guide/traditional_quantization_v0/README.md"
       - 传统模型量化: "zh/feature_guide/traditional_quantization_v0/traditional_quantization.md"
       - 大模型压缩: "zh/feature_guide/traditional_quantization_v0/foundation_model_compression.md"

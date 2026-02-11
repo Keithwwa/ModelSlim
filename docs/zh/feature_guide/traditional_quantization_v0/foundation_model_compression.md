@@ -6,6 +6,10 @@
 ### 特殊模型限制说明
 - **MOE 模型**：支持 W8A8 per-token、W8A16 per-channel/per-group 场景，不支持 lowbit 稀疏量化。
 - **多模态模型**：仅支持 W8A16 场景，不支持 W8A8 和 lowbit 稀疏量化。
+- **硬件支持**：
+    - Atlas 推理系列产品（Atlas 300I Duo 推理卡）。
+    - Atlas 训练系列产品。
+    - Atlas A2 训练系列产品/Atlas 800I A2 推理产品/A200I A2 Box 异构组件。
 
 ---
 
@@ -34,7 +38,50 @@ export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 3. **校准执行**：调用 `Calibrator.run()`。
 4. **模型保存**：调用 `save(save_type=['numpy', 'safe_tensor'])`。
 
-### 精度调优与定位 {#精度调优与定位}
+### 使用示例 (以 ChatGLM2-6B 为例)
+以下是一个标准的 W8A8 per-channel 量化脚本：
+
+```python
+import torch 
+import torch_npu 
+from transformers import AutoTokenizer, AutoModel
+from msmodelslim.pytorch.llm_ptq.llm_ptq_tools import Calibrator, QuantConfig
+
+# 1. 加载模型
+model_path = './chatglm2'
+tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
+model = AutoModel.from_pretrained(model_path, local_files_only=True).npu()
+
+# 2. 准备校准数据 (建议 20-40 条)
+calib_list = ["中国的首都在哪里？", "请写一段关于秋天的诗。", "如何学习Python？"]
+def get_calib_dataset(tokenizer, calib_list):
+    dataset = []
+    for data in calib_list:
+        inputs = tokenizer([data], return_tensors='pt').to(model.device)
+        dataset.append([inputs.data['input_ids'], inputs.data['attention_mask']])
+    return dataset
+dataset_calib = get_calib_dataset(tokenizer, calib_list)
+
+# 3. 配置量化参数
+quant_config = QuantConfig(
+    a_bit=8, w_bit=8, dev_type='npu', act_method=3, pr=0.5, mm_tensor=False
+)
+
+# 4. 执行量化与保存
+calibrator = Calibrator(model, quant_config, calib_data=dataset_calib, disable_level='L0')
+calibrator.run()
+calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])
+```
+
+### 常见量化场景配置
+- **W8A16 / W4A16**: 设置 `a_bit=16`, `w_bit=8/4`。推荐 `w_method='GPTQ'` 或 `'HQQ'`。
+- **KV Cache 量化**: 在 `QuantConfig` 中配置 `use_kvcache_quant=True`。
+- **低显存量化 (Low VRAM)**: 当显存不足时，利用 `accelerate` 将模型映射到内存：
+  ```python
+  model = AutoModelForCausalLM.from_pretrained(..., device_map="auto", max_memory={0: "25GiB", "cpu": "500GiB"})
+  ```
+
+### 精度调优与定位
 如果精度不达标，可使用以下方法：
 - **精度定位**：使用 `FakeQuantizeCalibrator` 接口构建伪量化模型进行前向推理测试。支持 W8A8 (per_channel)、W8A16 per-channel (MinMax, GPTQ, HQQ) 场景。
 
@@ -67,7 +114,7 @@ export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
 
 ---
 
-## FA3 量化 (Flash Attention 3) {#fa3-量化-flash-attention-3}
+## FA3 量化 (Flash Attention 3)
 
 ### 简介
 在 KV-Cache 基础上增强硬件利用率，支持 Llama3.1, Qwen2.5 等模型。仅 Atlas 800I A2 推理产品支持。
@@ -100,3 +147,16 @@ model = AutoModelForCausalLM.from_pretrained(..., device_map="auto", max_memory=
 
 ### 使用方法
 使用 `RACompressor` 或 `RARopeCompressor` 导出压缩窗口 `.pt` 文件。
+
+---
+
+## 附录：量化权重说明
+
+### 文件格式
+- **npy 格式**：保存为字典，Key 为权重名，Value 为数值。
+- **safetensors 格式**：包含 `quant_model_weight.safetensors` 和描述文件 `json`。
+
+### 命名规则
+- **W8A16**: 每个 Linear 生成 `weight`, `weight_scale`, `weight_offset`。
+- **W8A8**: 每个 Linear 生成 `weight`, `input_scale`, `input_offset`, `deq_scale`, `quant_bias`。
+- **KV Cache**: 生成 `kv_cache_scale`, `kv_cache_offset` 等。

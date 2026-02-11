@@ -60,7 +60,7 @@
 | Iterative Smooth | 解决o_proj、down_proj等层因无相邻LayerNorm而无法转移scale的问题。支持对称/非对称 | **优先使用**。运行快，精度较高。超长序列校准集时优先使用。可调整 `alpha` 参数优化 | [iterative_smooth.md](../quantization_algorithms/outlier_suppression_algorithms/iterative_smooth.md) |
 | Flex Smooth Quant | 通过二阶段网格搜索自动寻找最优alpha和beta参数，实现更精细的平衡 | 当Iterative Smooth不达标、对量化时间不敏感且显存充足时尝试。运行速度较慢 | [flex_smooth_quant.md](../quantization_algorithms/outlier_suppression_algorithms/flex_smooth_quant.md) |
 | Flex AWQ SSZ | 结合 AWQ 和 SSZ 思想，使用真实量化器评估 MSE 误差，自动搜索最优 alpha | **INT4 低比特量化必备**。针对低比特权重量化精度敏感的特点，寻找最优参数。精度提升显著，但运行速度较慢 | [flex_awq_ssz.md](../quantization_algorithms/outlier_suppression_algorithms/flex_awq_ssz.md) |
-| QuaRot | 通过对权重 and 激活进行旋转变换，将离群值"分散"到多个通道，平滑分布 | 可与其他算法叠加使用，作为进一步提升精度的备选方案。对于 W4A4 等极端场景效果显著 | [quarot.md](../quantization_algorithms/outlier_suppression_algorithms/quarot.md) |
+| QuaRot | 通过对权重和激活进行旋转变换，将离群值"分散"到多个通道，平滑分布 | 可与其他算法叠加使用，作为进一步提升精度的备选方案。对于 W4A4 等极端场景效果显著 | [quarot.md](../quantization_algorithms/outlier_suppression_algorithms/quarot.md) |
 | KV Smooth | 专门针对 KVCache 中的 Key 离群值抑制，将其迁移至 Query | **KVCache 量化必备**。在不改变注意力打分前提下压缩 K 的动态范围，提升生成质量 | [kv_smooth.md](../quantization_algorithms/outlier_suppression_algorithms/kv_smooth.md) |
 | LAOS | 协同优化方案。通过 QuaRot 和 Iterative Smooth 抑制离群值，配合 AutoRound 优化权重舍入 | **W4A4 极致精度方案**。当前主要适配 Qwen3 稠密系列模型 | [laos.md](../quantization_algorithms/quantization_algorithms/laos.md) |
 

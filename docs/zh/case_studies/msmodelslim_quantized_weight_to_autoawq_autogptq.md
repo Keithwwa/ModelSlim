@@ -34,7 +34,7 @@ anti_outlier.process()
 ```
 
 b.QuantConfig配置
-per_channel和per_group的参数配置是有差异多。  
+per_channel和per_group的参数配置是有差异的。 
 (1)per_group需要配置这三个参数：is_lowbit=True, open_outlier=False, group_size=128。  
 (2)per_channel场景下，如下的三个参数不需要配置，注释掉：is_lowbit=True, open_outlier=False, group_size=128。  
 (3)如果是AutoGPTQ需要更改w_method为='GPTQ', 另外开启GPTQ跑量化时间相对较长。  

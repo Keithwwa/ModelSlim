@@ -447,7 +447,7 @@ multimodal_sd_modelslim_v1是专门为多模态生成模型（如Wan2.1等）设
 
 #### runner - 量化调度器类型
 
-当前多模态生成模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式. runner默认无需配置，配置为非'layer_wise'值时，会警告提示并自动转换为layer_wise（逐层量化）形式。
+当前多模态生成模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式。runner默认无需配置，配置为非'layer_wise'值时，会警告提示并自动转换为layer_wise（逐层量化）形式。
 
 #### process - 处理器配置字段
 
@@ -570,7 +570,7 @@ multimodal_vlm_modelslim_v1是专门为多模态视觉语言模型（VLM）设�
 
 #### runner - 量化调度器类型
 
-当前多模态VLM模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式. runner默认无需配置，配置为非'layer_wise'字段时，会警告提示并自动转换为layer_wise（逐层量化）形式。
+当前多模态VLM模型考虑到显存占用问题，默认且仅支持layer_wise（逐层量化）形式。runner默认无需配置，配置为非'layer_wise'字段时，会警告提示并自动转换为layer_wise（逐层量化）形式。
 
 #### process - 处理器配置字段 {#process---处理器配置字段-vlm}
 

@@ -7,11 +7,15 @@ msModelSlim 提供了两种量化方式：**一键量化（V1）**和**传统量
 - **一键量化（V1）**：面向零基础用户，通过命令行方式快速完成量化，具备“开箱即用”的特性。系统会自动匹配最佳实践配置，用户只需指定必要参数即可；此外也支持自定义精细化混合量化策略，灵活性高。
 - **传统量化（V0）**：通过 Python 脚本方式执行量化，在泛化性、可读性等方面均低于一键量化，已停止演进，通常用于一键量化尚未支持的模型。
 
-下面将以 Qwen2.5-7B-Instruct 为例进行介绍。
+下面将以 Qwen2.5-7B-Instruct 为例完成量化并基于vllm-ascend完成一次推理。
 
 ## 环境准备
 
-### 1. 安装 msModelSlim
+### 1. 镜像准备
+
+vllm-ascend提供用于部署的Docker镜像，可以从镜像仓库[ascend/vllm-ascend](https://quay.io/repository/ascend/vllm-ascend?tab=tags)拉取预构建镜像，具体参考[vllm-ascend快速入门](https://docs.vllm.ai/projects/ascend/en/latest/)。
+
+### 2. 镜像内安装 msModelSlim
 
 ```shell
 # 1. git clone msmodelslim 代码
@@ -24,17 +28,17 @@ bash install.sh
 
 **注意：** 使用 msmodelslim 命令行工具时，请不要在 msmodelslim 源码目录下执行 msmodelslim 命令，这样做可能会因为 Python 导入模块时源码路径和安装路径冲突，导致命令执行报错。
 
-### 2. 下载大模型原始浮点权重
+### 3. 下载大模型原始浮点权重
 
 以 Qwen2.5-7B-Instruct 为例，可前往 [Qwen2.5-7B-Instruct](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct) 获取原始模型权重。
 
-### 3. 安装其他依赖（与模型相关，参考huggingface Model card）
+### 4. 安装其他依赖（与模型相关，参考huggingface Model card）
 
 ```shell
 pip install transformers==4.43.1
 ```
 
-### 4. 准备校准数据
+### 5. 准备校准数据
 
 传统量化方式需要准备校准数据文件（`.jsonl` 格式），用于量化过程中的校准。示例数据文件位于 `example/common/` 目录下，如 `boolq.jsonl`、`teacher_qualification.jsonl` 等。
 
@@ -156,9 +160,9 @@ python3 example/Qwen/quant_qwen.py \
 
 量化完成后，您可以使用生成的量化权重进行推理。根据不同的推理框架，使用方法如下：
 
-### 1. 在 vLLM-Ascend 中使用
+### 1. 在 vllm-ascend 中使用
 
-可参考 vLLM-Ascend 官方文档 [Qwen3-32B-W4A4 教程](https://docs.vllm.ai/projects/ascend/en/latest/tutorials/Qwen3-32B-W4A4.html)运行Docker容器。
+可参考 vllm-ascend 官方文档 [Qwen3-32B-W4A4 教程](https://docs.vllm.ai/projects/ascend/en/latest/tutorials/Qwen3-32B-W4A4.html)运行Docker容器。
 
 #### 1.1 环境准备与模型目录结构
 
@@ -170,7 +174,7 @@ SAVE_PATH=/home/models/Qwen2.5-7B-w8a8
 
 #### 1.2 单卡在线服务部署
 
-在 Ascend 设备上使用 vLLM-Ascend 提供在线服务时，可执行：
+在 Ascend 设备上使用 vllm-ascend 提供在线服务时，可执行：
 
 ```bash
 vllm serve /home/models/Qwen2.5-7B-w8a8 \
@@ -207,7 +211,7 @@ curl http://localhost:8000/v1/completions \
 
 #### 1.3 单卡离线推理（Python API）
 
-如果希望在 Python 脚本中直接加载量化后模型进行离线推理，可以使用 vLLM-Ascend 的 `LLM` 接口：
+如果希望在 Python 脚本中直接加载量化后模型进行离线推理，可以使用 vllm-ascend 的 `LLM` 接口：
 
 ```python
 from vllm import LLM, SamplingParams

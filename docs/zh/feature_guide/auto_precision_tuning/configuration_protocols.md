@@ -42,7 +42,7 @@ evaluation:
   evaluation:
     type: aisbench
     precheck:  # 可选，正式评估前的预检查配置列表
-      # 预检查配置列表，每个元素包含 type 字段
+      # 预检查配置列表，每个元素包含 type 字段（garbled_text 或 expected_answer）
     # 其他测评工具配置
   inference_engine:
     # 推理引擎配置

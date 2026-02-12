@@ -260,7 +260,7 @@ def get_calib_dataset(tokenizer, calib_list, device=f"npu:{device_id}"):
         calib_dataset.append([inputs.data['input_ids'].to(device), inputs.data['attention_mask'].to(device)])       
     return calib_dataset
 ```
-注： 需要将msmodelslim文件夹下的[precision_tool文件夹](https://gitcode.com/Ascend/msmodelslim/tree/master/precision_tool)和[security文件夹](https://gitcode.com/Ascend/msmodelslim/tree/master/security)复制一份出来，和量化脚本放置于同一目录下，再将待测试数据集放入precision_tool文件夹中，具体操作见：[Precision Tool 使用方法说明及数据集下载链接](../feature_guide/traditional_quantization_v0/foundation_model_compression.md#精度调优与定位)
+注： 需要将msmodelslim文件夹下的[precision_tool文件夹](https://gitcode.com/Ascend/msmodelslim/tree/master/precision_tool)和[security文件夹](https://gitcode.com/Ascend/msmodelslim/tree/master/security)复制一份出来，和量化脚本放置于同一目录下，再将待测试数据集放入precision_tool文件夹中，具体操作见：[Precision Tool 使用方法说明及数据集下载链接](../feature_guide/traditional_quantization_v0/foundation_model_compression.md#精度定位方法)
 
 
 ### 4 量化回退
@@ -348,7 +348,7 @@ use_kvcache_quant=True启用KV Cache量化，支持与W8A8、W8A16和稀疏量�
 
 ### 6 FA3量化
 
-[FA量化使用说明](../feature_guide/traditional_quantization_v0/foundation_model_compression.md#fa3-量化-flash-attention-3)  
+[FA量化使用说明](../feature_guide/traditional_quantization_v0/foundation_model_quantization_and_calibration.md#fa3量化)  
 
 
 ### 7 以chatglm2-6b为例，逐步进行调优后的精度改变

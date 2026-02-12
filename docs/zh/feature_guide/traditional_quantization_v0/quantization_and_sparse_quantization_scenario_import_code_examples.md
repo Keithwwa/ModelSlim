@@ -1,6 +1,8 @@
-# 量化及稀疏量化场景导入代码样例
+# 常见代码示例
 
-## W8A8_kvcache量化场景
+## 量化及稀疏量化场景导入代码样例
+
+### W8A8_kvcache量化场景
 
 W8A8_kvcache量化场景导入的样例代码如下：
 ```python
@@ -52,7 +54,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A8_lowbit算法量化场景
+### W8A8_lowbit算法量化场景
 
 W8A8_lowbit算法量化场景导入的样例代码如下：
 
@@ -106,7 +108,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A8_per_token算法量化场景
+### W8A8_per_token算法量化场景
 说明
 W8A8_per_token不支持在Atlas 推理系列产品中对MoE模型权重进行量化。
 W8A8_per_token算法量化场景导入的样例代码如下：
@@ -160,7 +162,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A16 per-channel_MinMax算法量化场景
+### W8A16 per-channel_MinMax算法量化场景
 
 W8A16 per-channel_MinMax算法量化场景导入的样例代码如下：
 ```python
@@ -212,7 +214,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A16 per-channel_HQQ算法量化场景
+### W8A16 per-channel_HQQ算法量化场景
 W8A16 per-channel_HQQ算法量化场景导入的样例代码如下：
 ```python
 # 导入相关依赖
@@ -262,7 +264,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A16 per-channel_GPTQ算法量化场景
+### W8A16 per-channel_GPTQ算法量化场景
 说明
 GPTQ方式处理MOE模型时，对校准集没运行到的线性层，会默认使用MinMax进行量化。
 GPTQ方式处理MOE模型时，不支持lowbit算法量化场景。
@@ -316,7 +318,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])   #使用s
 print('Save quant weight success!')
 ```
 
-## W8A16 per-channel_AWQ算法量化场景
+### W8A16 per-channel_AWQ算法量化场景
 说明
 AWQ方式处理MOE模型时，不对专家结构做任何处理。
 W8A16 per-channel_AWQ算法量化导入的样例代码：
@@ -384,7 +386,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])   #使用s
 print('Save quant weight success!')
 ```
 
-## W8A16_kvcache量化场景
+### W8A16_kvcache量化场景
 W8A16_kvcache量化场景导入的样例代码如下：
 ```python
 # 导入相关依赖
@@ -435,7 +437,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## W8A16 per-group量化场景
+### W8A16 per-group量化场景
 说明
 W8A16支持使用MinMax、HQQ、GPTQ或AWQ算法进行per-group量化。
 W8A16 per-group场景导入的样例代码如下：
@@ -508,7 +510,7 @@ calibrator.save('./quant_weight', save_type=['numpy', 'safe_tensor'])      #使�
 print('Save quant weight success!')
 ```
 
-## lowbit算法稀疏量化场景
+### lowbit算法稀疏量化场景
 lowbit算法稀疏量化场景导入代码样例：
 ```python
 # 导入相关依赖
@@ -562,7 +564,7 @@ calibrator.save('./quant_weight')      #使用save()保存模型量化参数，�
 print('Save quant weight success!')
 ```
 
-## W4A8 dynamic 量化场景
+### W4A8 dynamic 量化场景
  W4A8 dynamic 量化场景导入代码样例：
 ```python
 # 导入相关依赖
@@ -599,7 +601,7 @@ calibrator.run()     #使用run()执行量化
 calibrator.save('./quant_weight', save_type=['safe_tensor'])   #使用save()保存模型量化参数，请根据实际情况修改路径及保存的格式
 print('Save quant weight success!')
 ```
-## W4A4 dynamic 量化场景
+### W4A4 dynamic 量化场景
  W4A4 dynamic 量化场景导入代码样例：
 ```python
 # 导入相关依赖
@@ -632,7 +634,7 @@ calibrator.run()     #使用run()执行量化
 calibrator.save('./quant_weight', save_type=['safe_tensor'])   #使用save()保存模型量化参数，请根据实际情况修改路径及保存的格式
 print('Save quant weight success!')
 ```
-## NF4算法量化场景
+### NF4算法量化场景
 NF4算法量化场景导入的样例代码如下：
 ```python
 # 导入相关依赖
@@ -663,7 +665,7 @@ calibrator.save('./quant_weight', save_type=['safe_tensor'])      #使用save()�
 print('Save quant weight success!')
 ```
 
-## 模拟多卡量化场景
+### 模拟多卡量化场景
 说明
 模拟多卡量化仅适用于TensorParallel多卡推理部署场景，暂不支持其他推理部署方式。
 模拟多卡量化场景导入代码样例：

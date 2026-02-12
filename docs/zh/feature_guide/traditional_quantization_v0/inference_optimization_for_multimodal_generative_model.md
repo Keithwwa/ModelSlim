@@ -1,9 +1,11 @@
-# 多模态视图生成推理优化工具
+# 多模态生成模型推理优化
 
-## 简介
+## 多模态视图生成推理优化工具
+
+### 简介
 本工具提供了针对大规模多模态生成模型的推理优化解决方案，专注于提升推理效率和资源利用率。
 
-## 使用前准备
+### 使用前准备
 
 ### 硬件平台
 - 仅支持在以下产品中使用。
@@ -13,7 +15,7 @@
 - 安装 msModelSlim 工具，详情请参见[《msModelSlim工具安装指南》](../../getting_started/install_guide.md)。
 - 参考开源模型仓库[OpenSoraPlanV1.2](https://github.com/PKU-YuanGroup/Open-Sora-Plan/releases/tag/v1.2.0) 的readme，下载模型权重，完成模型所需的python环境依赖的安装。
 
-### 环境配置 {#环境要求}
+### 环境配置
 ```bash
 # Install torch_npu and decord
 pip install torch_npu==2.1.0.post6
@@ -31,16 +33,13 @@ cd <Open-Sora-Plan-1.2.0>
 pip install -e .[train]
 ```
 
-## 功能介绍
+### 功能介绍
 
 ### 支持模型
 
 | 模型名称 | 框架 | 优化特性 | 说明 |
 |---------|------|----------|------|
 | OpenSoraPlanV1.2 | PyTorch | [采样优化](#自适应采样优化), [DiT缓存优化](#dit缓存优化) | • [模型源码链接](https://github.com/PKU-YuanGroup/Open-Sora-Plan/releases/tag/v1.2.0)<br>• 采样优化目前仅支持29\*480p场景,可达到2×加速,vbench精度损失<1% |
-
-
-
 
 ### DiT缓存优化
 
@@ -63,6 +62,7 @@ DiT模型在推理过程中需要多次计算transformer block的输出。传统
 4. 选择能在减少计算量的同时保持生成质量的最优缓存配置。
 
 ```mermaid
+%%{init: {'theme': 'forest'}}%%
 sequenceDiagram
     participant U as 用户
     participant S as 搜索系统
@@ -83,6 +83,7 @@ sequenceDiagram
 ### 使用流程概览
 
 ```mermaid
+%%{init: {'theme': 'forest'}}%%
 graph TD
     A[1.准备环境和模型] --> B[2.定义pipeline运行函数]
     B --> C[3.配置和初始化缓存适配器]
@@ -91,12 +92,12 @@ graph TD
 ```
 
 ### 详细使用步骤
-详细使用接口说明请参考 [DitCache 接口文档](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheAdaptor.md) 和 [DitCacheAdaptor](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheAdaptor.md)。
+详细使用接口说明请参考 [DitCacheSearchConfig](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheSearchConfig.md) 和 [DitCacheAdaptor](../../python_api_v0/multimodal_inference_apis/DitCache/DitCacheAdaptor.md)。
 
 #### 1. 准备环境和模型
 
 首先确保已完成环境配置和模型下载：
-- 参考[环境要求](#环境要求)完成环境安装和模型权重下载
+- 参考[使用前准备](#使用前准备)完成环境安装和模型权重下载
 
 #### 2. 定义pipeline运行函数
 
@@ -269,9 +270,7 @@ torchrun --nnodes=1 --nproc_per_node 8 --master_port 29503 \
 5. **参数一致性**: 确保在搜索和推理时使用相同的模型参数配置（如采样步数、图像尺寸等）
 6. **加速效果**: 在29\*480p和93\*720p场景下，生成结果可达到约1.3倍加速，同时保持生成质量
 
-
-## 自适应采样优化
-
+### 自适应采样优化
 
 采样优化适配器，用于搜索和优化稳定扩散模型的采样步骤，以提高推理效率。
 
@@ -324,7 +323,6 @@ scheduler_timestep = restep_adaptor.search()
 ```
 
 #### 3. 用搜索的 timestep 进行推理
-
 
 示例推理命令（完整脚本请参考[sample_t2v_sp.sh](https://gitcode.com/Ascend/msmodelslim/blob/master/example/osp1_2/sample_t2v_sp.sh)）： 
 ```shell

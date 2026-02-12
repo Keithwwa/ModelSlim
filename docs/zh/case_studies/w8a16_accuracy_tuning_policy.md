@@ -215,7 +215,7 @@ def get_calib_dataset(tokenizer, calib_list, device=f"npu:{device_id}"):
         calib_dataset.append([inputs.data['input_ids'].to(device), inputs.data['attention_mask'].to(device)])       
     return calib_dataset
 ```
-注： [Precision Tool 使用方法说明及数据集下载链接](../feature_guide/traditional_quantization_v0/foundation_model_compression.md#精度调优与定位)  
+注： [Precision Tool 使用方法说明及数据集下载链接](../feature_guide/traditional_quantization_v0/foundation_model_compression.md#精度定位方法)  
 
 ### 4 量化回退
 量化回退的原因：某些网络层对于量化比较敏感，量化后会带来较大的精度损失，这些层是不太适合量化的，应该使用浮点数进行计算，这个过程称之为回退（回退的都是线性层），可以通过设置disable_names控制哪些层应该被回退。

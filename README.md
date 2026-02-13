@@ -146,8 +146,8 @@ msModelSlim的版本说明包含msModelSlim的软件版本配套关系和软件�
       <td><a href="https://modelslim.readthedocs.io/zh-cn/latest/zh/case_studies/quantization_precision_tuning_guide/">v1框架量化精度调优指南</a></td>
     </tr>
     <tr>
-      <td>v1框架Qwen3-32B w8a8a精度调优</td>
-      <td><a href="https://modelslim.readthedocs.io/zh-cn/latest/zh/case_studies/qwen3-32B_w8a8_precision_tuning_case/">v1框架Qwen3-32B w8a8a精度调优案例</a></td>
+      <td>v1框架Qwen3-32B 精度调优</td>
+      <td><a href="https://modelslim.readthedocs.io/zh-cn/latest/zh/case_studies/qwen3-32B_w8a8_precision_tuning_case/">v1框架Qwen3-32B w8a8精度调优案例</a></td>
     </tr>
     <tr>
       <td><strong>稀疏量化调试</strong></td>

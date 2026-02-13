@@ -14,7 +14,7 @@
 [![Stars](https://img.shields.io/badge/dynamic/json?logo=ReverbNation&label=stars&logoColor=yellow&color=yellow&query=$.stargazers_count&url=https://gitcode.com/api/v5/repos/Ascend/msmodelslim)](https://gitcode.com/Ascend/msmodelslim/stargazers)
 [![Issues](https://img.shields.io/badge/dynamic/json?logo=gitcode&label=issues&logoColor=blue&color=red&query=$.open_issues_count&url=https://gitcode.com/api/v5/repos/Ascend/msmodelslim)](https://gitcode.com/Ascend/msmodelslim/issues)<br>
 [![License](https://img.shields.io/badge/license-Apache--2.0-red?logo=apache)](https://gitcode.com/Ascend/msmodelslim/blob/master/LICENSE)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Keithwwa/ModelSlim)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Keithwwa/msmodelslim)
 <br><br>
 [🌐项目主页](https://gitcode.com/Ascend/msmodelslim) |
 [📖工具文档](https://modelslim.readthedocs.io/zh-cn/latest/) |

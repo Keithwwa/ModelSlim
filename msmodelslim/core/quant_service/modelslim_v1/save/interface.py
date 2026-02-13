@@ -20,8 +20,22 @@ See the Mulan PSL v2 for more details.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Tuple
+
+import torch
 import torch.nn as nn
+
+
+class AscendV1GlobalModelDtypeInterface(ABC):
+    """Interface for adapters that expose the global model torch dtype (e.g. for Saver to decide deq_scale int64)."""
+
+    @abstractmethod
+    def get_global_model_torch_dtype(self) -> torch.dtype:
+        """
+        Return the global torch dtype used for model loading/calibration.
+        Used by Saver and other components to infer precision (e.g. whether bfloat16).
+        """
+        ...
 
 
 class AscendV1SaveInterface(ABC):
@@ -33,6 +47,12 @@ class AscendV1SaveInterface(ABC):
         """
         pass
 
-    def ascendv1_save_module_preprocess(self, prefix: str, module: nn.Module, model: nn.Module) -> Optional[nn.Module]:
+    def ascendv1_save_module_preprocess(self, prefix: str, module: nn.Module, model: nn.Module) -> Tuple[str, nn.Module]:
+        """
+        在保存模块前，对模块进行预处理，返回新的前缀和模块
+        @param prefix: 模块的前缀路径
+        @param module: 待处理的模块
+        @param model: 模型
+        @return: 返回(prefix, module)
+        """
         pass
-        
